@@ -54,7 +54,7 @@ public abstract class ClientPlayerInteractionManagerMixin
 		target = "Lnet/minecraft/client/network/ClientPlayerEntity;getEntityId()I",
 		ordinal = 0)},
 		method = {
-			"method_2902(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)Z"})
+			"updateBlockBreakingProgress(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)Z"})
 	private void onPlayerDamageBlock(BlockPos blockPos_1, Direction direction_1,
 		CallbackInfoReturnable<Boolean> cir)
 	{
