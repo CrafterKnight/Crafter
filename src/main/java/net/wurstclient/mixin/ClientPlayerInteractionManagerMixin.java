@@ -48,7 +48,7 @@ public abstract class ClientPlayerInteractionManagerMixin
 	 * blockHitDelay
 	 */
 	@Shadow
-	private int field_3716;
+	private int blockBreakingCooldown;
 	
 	@Inject(at = {@At(value = "INVOKE",
 		target = "Lnet/minecraft/client/network/ClientPlayerEntity;getEntityId()I",
@@ -125,7 +125,7 @@ public abstract class ClientPlayerInteractionManagerMixin
 	@Override
 	public void setBlockHitDelay(int delay)
 	{
-		field_3716 = delay;
+		blockBreakingCooldown = delay;
 	}
 	
 	@Shadow
