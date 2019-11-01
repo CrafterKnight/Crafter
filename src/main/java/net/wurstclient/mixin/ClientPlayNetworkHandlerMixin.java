@@ -586,7 +586,7 @@ public class ClientPlayNetworkHandlerMixin implements ClientPlayPacketListener
 	
 	@Shadow
 	@Override
-	public void onCraftFailedResponse(CraftFailedResponseS2CPacket var1)
+	public void onCraftResponse(CraftResponseS2CPacket var1)
 	{
 		
 	}
