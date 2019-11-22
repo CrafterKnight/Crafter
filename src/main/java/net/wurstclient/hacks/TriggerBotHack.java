@@ -7,15 +7,11 @@
  */
 package net.wurstclient.hacks;
 
-import java.util.Comparator;
-import java.util.function.ToDoubleFunction;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
-
-import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.WaterCreatureEntity;
 import net.minecraft.entity.mob.AmbientEntity;
@@ -30,46 +26,32 @@ import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.wurstclient.Category;
-import net.wurstclient.events.RenderListener;
+import net.wurstclient.SearchTags;
 import net.wurstclient.events.UpdateListener;
 import net.wurstclient.hack.Hack;
 import net.wurstclient.settings.CheckboxSetting;
-import net.wurstclient.settings.EnumSetting;
 import net.wurstclient.settings.SliderSetting;
 import net.wurstclient.settings.SliderSetting.ValueDisplay;
 import net.wurstclient.util.FakePlayerEntity;
-import net.wurstclient.util.RenderUtils;
-import net.wurstclient.util.RotationUtils;
-import net.wurstclient.util.RotationUtils.Rotation;
 
-public final class KillauraLegitHack extends Hack
-	implements UpdateListener, RenderListener
+@SearchTags({"trigger bot"})
+public final class TriggerBotHack extends Hack implements UpdateListener
 {
 	private final SliderSetting range =
-		new SliderSetting("Range", 4.25, 1, 4.25, 0.05, ValueDisplay.DECIMAL);
-	
-	private final EnumSetting<Priority> priority = new EnumSetting<>("Priority",
-		"Determines which entity will be attacked first.\n"
-			+ "\u00a7lDistance\u00a7r - Attacks the closest entity.\n"
-			+ "\u00a7lAngle\u00a7r - Attacks the entity that requires\n"
-			+ "the least head movement.\n"
-			+ "\u00a7lHealth\u00a7r - Attacks the weakest entity.",
-		Priority.values(), Priority.ANGLE);
+		new SliderSetting("Range", 4.25, 1, 6, 0.05, ValueDisplay.DECIMAL);
 	
 	private final CheckboxSetting filterPlayers = new CheckboxSetting(
 		"Filter players", "Won't attack other players.", false);
 	private final CheckboxSetting filterSleeping = new CheckboxSetting(
-		"Filter sleeping", "Won't attack sleeping players.", true);
+		"Filter sleeping", "Won't attack sleeping players.", false);
 	private final SliderSetting filterFlying =
 		new SliderSetting("Filter flying",
 			"Won't attack players that\n" + "are at least the given\n"
 				+ "distance above ground.",
-			0.5, 0, 2, 0.05,
+			0, 0, 2, 0.05,
 			v -> v == 0 ? "off" : ValueDisplay.DECIMAL.getValueString(v));
 	
 	private final CheckboxSetting filterMonsters = new CheckboxSetting(
@@ -95,17 +77,14 @@ public final class KillauraLegitHack extends Hack
 			"Won't attack iron golems,\n" + "snow golems and shulkers.", false);
 	
 	private final CheckboxSetting filterInvisible = new CheckboxSetting(
-		"Filter invisible", "Won't attack invisible entities.", true);
+		"Filter invisible", "Won't attack invisible entities.", false);
 	
-	private LivingEntity target;
-	
-	public KillauraLegitHack()
+	public TriggerBotHack()
 	{
-		super("KillauraLegit", "Slower Killaura that is harder to detect.\n"
-			+ "Not required on normal NoCheat+ servers!");
+		super("TriggerBot",
+			"Automatically attacks the entity you're looking at.");
 		setCategory(Category.COMBAT);
 		addSetting(range);
-		addSetting(priority);
 		addSetting(filterPlayers);
 		addSetting(filterSleeping);
 		addSetting(filterFlying);
@@ -121,37 +100,47 @@ public final class KillauraLegitHack extends Hack
 	}
 	
 	@Override
-	protected void onEnable()
+	public void onEnable()
 	{
 		// disable other killauras
 		WURST.getHax().clickAuraHack.setEnabled(false);
 		WURST.getHax().killauraHack.setEnabled(false);
-		WURST.getHax().triggerBotHack.setEnabled(false);
+		WURST.getHax().killauraLegitHack.setEnabled(false);
 		
 		EVENTS.add(UpdateListener.class, this);
-		EVENTS.add(RenderListener.class, this);
 	}
 	
 	@Override
-	protected void onDisable()
+	public void onDisable()
 	{
 		EVENTS.remove(UpdateListener.class, this);
-		EVENTS.remove(RenderListener.class, this);
-		target = null;
 	}
 	
 	@Override
 	public void onUpdate()
 	{
 		ClientPlayerEntity player = MC.player;
-		ClientWorld world = MC.world;
-		
 		if(player.getAttackCooldownProgress(0) < 1)
 			return;
 		
+		if(MC.hitResult == null || !(MC.hitResult instanceof EntityHitResult))
+			return;
+		
+		Entity target = ((EntityHitResult)MC.hitResult).getEntity();
+		if(!isCorrectEntity(target))
+			return;
+		
+		MC.interactionManager.attackEntity(player, target);
+		player.swingHand(Hand.MAIN_HAND);
+	}
+	
+	private boolean isCorrectEntity(Entity entity)
+	{
+		ClientPlayerEntity player = MC.player;
+		ClientWorld world = MC.world;
+		
 		double rangeSq = Math.pow(range.getValue(), 2);
-		Stream<LivingEntity> stream = StreamSupport
-			.stream(MC.world.getEntities().spliterator(), true)
+		Stream<LivingEntity> stream = Stream.of(entity)
 			.filter(e -> e instanceof LivingEntity).map(e -> (LivingEntity)e)
 			.filter(e -> !e.removed && e.getHealth() > 0)
 			.filter(e -> player.squaredDistanceTo(e) <= rangeSq)
@@ -211,136 +200,6 @@ public final class KillauraLegitHack extends Hack
 		if(filterInvisible.isChecked())
 			stream = stream.filter(e -> !e.isInvisible());
 		
-		target = stream.min(priority.getSelected().comparator).orElse(null);
-		if(target == null)
-			return;
-		
-		// face entity
-		if(!faceEntityClient(target))
-			return;
-		
-		// attack entity
-		MC.interactionManager.attackEntity(player, target);
-		player.swingHand(Hand.MAIN_HAND);
-	}
-	
-	private boolean faceEntityClient(LivingEntity entity)
-	{
-		// get position & rotation
-		Vec3d eyesPos = RotationUtils.getEyesPos();
-		Vec3d lookVec = RotationUtils.getServerLookVec();
-		
-		// try to face center of boundingBox
-		Box bb = entity.getBoundingBox();
-		if(faceVectorClient(bb.getCenter()))
-			return true;
-		
-		// if not facing center, check if facing anything in boundingBox
-		return bb.rayTrace(eyesPos,
-			eyesPos.add(lookVec.multiply(range.getValue()))) != null;
-	}
-	
-	private boolean faceVectorClient(Vec3d vec)
-	{
-		Rotation rotation = RotationUtils.getNeededRotations(vec);
-		
-		float oldYaw = MC.player.prevYaw;
-		float oldPitch = MC.player.prevPitch;
-		
-		MC.player.yaw = limitAngleChange(oldYaw, rotation.getYaw(), 30);
-		MC.player.pitch = rotation.getPitch();
-		
-		return Math.abs(oldYaw - rotation.getYaw())
-			+ Math.abs(oldPitch - rotation.getPitch()) < 1F;
-	}
-	
-	private float limitAngleChange(float current, float intended,
-		float maxChange)
-	{
-		float change = MathHelper.wrapDegrees(intended - current);
-		change = MathHelper.clamp(change, -maxChange, maxChange);
-		return MathHelper.wrapDegrees(current + change);
-	}
-	
-	@Override
-	public void onRender(float partialTicks)
-	{
-		if(target == null)
-			return;
-		
-		// GL settings
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glEnable(GL11.GL_LINE_SMOOTH);
-		GL11.glLineWidth(2);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		
-		GL11.glPushMatrix();
-		RenderUtils.applyRenderOffset();
-		
-		Box box = new Box(BlockPos.ORIGIN);
-		float p = (target.getHealthMaximum() - target.getHealth())
-			/ target.getHealthMaximum();
-		float red = p * 2F;
-		float green = 2 - red;
-		
-		GL11.glTranslated(
-			target.prevX + (target.x - target.prevX) * partialTicks,
-			target.prevY + (target.y - target.prevY) * partialTicks,
-			target.prevZ + (target.z - target.prevZ) * partialTicks);
-		GL11.glTranslated(0, 0.05, 0);
-		GL11.glScaled(target.getWidth(), target.getHeight(), target.getWidth());
-		GL11.glTranslated(-0.5, 0, -0.5);
-		
-		if(p < 1)
-		{
-			GL11.glTranslated(0.5, 0.5, 0.5);
-			GL11.glScaled(p, p, p);
-			GL11.glTranslated(-0.5, -0.5, -0.5);
-		}
-		
-		GL11.glColor4f(red, green, 0, 0.25F);
-		RenderUtils.drawSolidBox(box);
-		
-		GL11.glColor4f(red, green, 0, 0.5F);
-		RenderUtils.drawOutlinedBox(box);
-		
-		GL11.glPopMatrix();
-		
-		// GL resets
-		GL11.glColor4f(1, 1, 1, 1);
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glDisable(GL11.GL_LINE_SMOOTH);
-	}
-	
-	private enum Priority
-	{
-		DISTANCE("Distance", e -> MC.player.squaredDistanceTo(e)),
-		
-		ANGLE("Angle",
-			e -> RotationUtils
-				.getAngleToLookVec(e.getBoundingBox().getCenter())),
-		
-		HEALTH("Health", e -> e.getHealth());
-		
-		private final String name;
-		private final Comparator<LivingEntity> comparator;
-		
-		private Priority(String name,
-			ToDoubleFunction<LivingEntity> keyExtractor)
-		{
-			this.name = name;
-			comparator = Comparator.comparingDouble(keyExtractor);
-		}
-		
-		@Override
-		public String toString()
-		{
-			return name;
-		}
+		return stream.findFirst().isPresent();
 	}
 }
