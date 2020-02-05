@@ -16,38 +16,38 @@ import net.minecraft.text.LiteralText;
 public class PressAKeyScreen extends Screen
 {
 	private PressAKeyCallback prevScreen;
-	
+
 	public PressAKeyScreen(PressAKeyCallback prevScreen)
 	{
 		super(new LiteralText(""));
-		
+
 		if(!(prevScreen instanceof Screen))
 			throw new IllegalArgumentException("prevScreen is not a screen");
-		
+
 		this.prevScreen = prevScreen;
 	}
-	
+
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int int_3)
 	{
 		if(keyCode != GLFW.GLFW_KEY_ESCAPE)
 			prevScreen.setKey(getKeyName(keyCode, scanCode));
-		
+
 		minecraft.openScreen((Screen)prevScreen);
 		return super.keyPressed(keyCode, scanCode, int_3);
 	}
-	
+
 	private String getKeyName(int keyCode, int scanCode)
 	{
 		return InputUtil.getKeyCode(keyCode, scanCode).getName();
 	}
-	
+
 	@Override
 	public boolean shouldCloseOnEsc()
 	{
 		return false;
 	}
-	
+
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks)
 	{

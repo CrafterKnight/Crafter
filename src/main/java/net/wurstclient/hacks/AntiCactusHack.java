@@ -22,19 +22,19 @@ public final class AntiCactusHack extends Hack
 		super("AntiCactus", "Protects you from cactus damage.");
 		setCategory(Category.BLOCKS);
 	}
-	
+
 	@Override
 	protected void onEnable()
 	{
 		EVENTS.add(CactusCollisionShapeListener.class, this);
 	}
-	
+
 	@Override
 	protected void onDisable()
 	{
 		EVENTS.remove(CactusCollisionShapeListener.class, this);
 	}
-	
+
 	@Override
 	public void onCactusCollisionShape(CactusCollisionShapeEvent event)
 	{

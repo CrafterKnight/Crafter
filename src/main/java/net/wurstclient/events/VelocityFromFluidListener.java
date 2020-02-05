@@ -15,7 +15,7 @@ import net.wurstclient.event.Listener;
 public interface VelocityFromFluidListener extends Listener
 {
 	public void onVelocityFromFluid(VelocityFromFluidEvent event);
-	
+
 	public static class VelocityFromFluidEvent
 		extends CancellableEvent<VelocityFromFluidListener>
 	{
@@ -25,12 +25,12 @@ public interface VelocityFromFluidListener extends Listener
 			for(VelocityFromFluidListener listener : listeners)
 			{
 				listener.onVelocityFromFluid(this);
-				
+
 				if(isCancelled())
 					break;
 			}
 		}
-		
+
 		@Override
 		public Class<VelocityFromFluidListener> getListenerType()
 		{

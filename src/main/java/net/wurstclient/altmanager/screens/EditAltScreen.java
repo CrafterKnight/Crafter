@@ -16,7 +16,7 @@ public final class EditAltScreen extends AltEditorScreen
 {
 	private final AltManager altManager;
 	private Alt editedAlt;
-	
+
 	public EditAltScreen(Screen prevScreen, AltManager altManager,
 		Alt editedAlt)
 	{
@@ -24,25 +24,25 @@ public final class EditAltScreen extends AltEditorScreen
 		this.altManager = altManager;
 		this.editedAlt = editedAlt;
 	}
-	
+
 	@Override
 	protected String getDefaultEmail()
 	{
 		return editedAlt.getEmail();
 	}
-	
+
 	@Override
 	protected String getDefaultPassword()
 	{
 		return editedAlt.getPassword();
 	}
-	
+
 	@Override
 	protected String getDoneButtonText()
 	{
 		return "Save";
 	}
-	
+
 	@Override
 	protected void pressDoneButton()
 	{

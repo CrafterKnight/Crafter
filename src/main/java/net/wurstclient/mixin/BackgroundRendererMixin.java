@@ -32,7 +32,7 @@ public class BackgroundRendererMixin
 		if(effect == StatusEffects.BLINDNESS
 			&& WurstClient.INSTANCE.getHax().antiBlindHack.isEnabled())
 			return false;
-		
+
 		return entity.hasStatusEffect(effect);
 	}
 }

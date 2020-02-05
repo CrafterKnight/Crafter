@@ -23,7 +23,7 @@ public abstract class RenderTickCounterMixin
 {
 	@Shadow
 	private float lastFrameDuration;
-	
+
 	@Inject(at = {@At(value = "FIELD",
 		target = "Lnet/minecraft/client/render/RenderTickCounter;prevTimeMillis:J",
 		opcode = Opcodes.PUTFIELD,

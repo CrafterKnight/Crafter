@@ -25,7 +25,7 @@ public final class ViewNbtCmd extends Command
 		super("viewnbt", "Shows you the NBT data of an item.", ".viewnbt",
 			"Copy to clipboard: .viewnbt copy");
 	}
-	
+
 	@Override
 	public void call(String[] args) throws CmdException
 	{
@@ -33,21 +33,21 @@ public final class ViewNbtCmd extends Command
 		ItemStack stack = player.inventory.getMainHandStack();
 		if(stack.isEmpty())
 			throw new CmdError("You must hold an item in your main hand.");
-		
+
 		CompoundTag tag = stack.getTag();
 		String nbt = tag == null ? "" : tag.asString();
-		
+
 		switch(String.join(" ", args).toLowerCase())
 		{
 			case "":
 			ChatUtils.message("NBT: " + nbt);
 			break;
-			
+
 			case "copy":
 			MC.keyboard.setClipboard(nbt);
 			ChatUtils.message("NBT data copied to clipboard.");
 			break;
-			
+
 			default:
 			throw new CmdSyntaxError();
 		}

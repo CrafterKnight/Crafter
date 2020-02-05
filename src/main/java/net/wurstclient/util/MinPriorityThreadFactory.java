@@ -18,7 +18,7 @@ public class MinPriorityThreadFactory implements ThreadFactory
 	private final ThreadGroup group;
 	private final AtomicInteger threadNumber = new AtomicInteger(1);
 	private final String namePrefix;
-	
+
 	public MinPriorityThreadFactory()
 	{
 		SecurityManager s = System.getSecurityManager();
@@ -26,7 +26,7 @@ public class MinPriorityThreadFactory implements ThreadFactory
 			: Thread.currentThread().getThreadGroup();
 		namePrefix = "pool-min-" + poolNumber.getAndIncrement() + "-thread-";
 	}
-	
+
 	@Override
 	public Thread newThread(Runnable r)
 	{
@@ -38,7 +38,7 @@ public class MinPriorityThreadFactory implements ThreadFactory
 			t.setPriority(Thread.MIN_PRIORITY);
 		return t;
 	}
-	
+
 	public static ExecutorService newFixedThreadPool()
 	{
 		return Executors.newFixedThreadPool(

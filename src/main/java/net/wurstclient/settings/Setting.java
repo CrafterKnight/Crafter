@@ -19,34 +19,34 @@ public abstract class Setting
 {
 	private final String name;
 	private final String description;
-	
+
 	public Setting(String name, String description)
 	{
 		this.name = Objects.requireNonNull(name);
 		this.description = Objects.requireNonNull(description);
 	}
-	
+
 	public final String getName()
 	{
 		return name;
 	}
-	
+
 	public final String getDescription()
 	{
 		return description;
 	}
-	
+
 	public abstract Component getComponent();
-	
+
 	public abstract void fromJson(JsonElement json);
-	
+
 	public abstract JsonElement toJson();
-	
+
 	public void update()
 	{
-		
+
 	}
-	
+
 	public abstract Set<PossibleKeybind> getPossibleKeybinds(
 		String featureName);
 }

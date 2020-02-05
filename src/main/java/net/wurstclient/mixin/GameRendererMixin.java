@@ -42,13 +42,13 @@ public abstract class GameRendererMixin
 		CameraTransformViewBobbingEvent event =
 			new CameraTransformViewBobbingEvent();
 		WurstClient.INSTANCE.getEventManager().fire(event);
-		
+
 		if(event.isCancelled())
 			return;
-		
+
 		bobView(matrixStack, partalTicks);
 	}
-	
+
 	@Inject(
 		at = {@At(value = "FIELD",
 			target = "Lnet/minecraft/client/render/GameRenderer;renderHand:Z",
@@ -62,7 +62,7 @@ public abstract class GameRendererMixin
 		RenderEvent event = new RenderEvent(partialTicks);
 		WurstClient.INSTANCE.getEventManager().fire(event);
 	}
-	
+
 	@Redirect(
 		at = @At(value = "FIELD",
 			target = "Lnet/minecraft/client/options/GameOptions;fov:D",
@@ -74,7 +74,7 @@ public abstract class GameRendererMixin
 		return WurstClient.INSTANCE.getOtfs().zoomOtf
 			.changeFovBasedOnZoom(options.fov);
 	}
-	
+
 	@Inject(at = {@At(value = "INVOKE",
 		target = "Lnet/minecraft/entity/Entity;getCameraPosVec(F)Lnet/minecraft/util/math/Vec3d;",
 		opcode = Opcodes.INVOKEVIRTUAL,
@@ -84,7 +84,7 @@ public abstract class GameRendererMixin
 		HitResultRayTraceEvent event = new HitResultRayTraceEvent(float_1);
 		WurstClient.INSTANCE.getEventManager().fire(event);
 	}
-	
+
 	@Redirect(
 		at = @At(value = "INVOKE",
 			target = "Lnet/minecraft/util/math/MathHelper;lerp(FFF)F",
@@ -95,10 +95,10 @@ public abstract class GameRendererMixin
 	{
 		if(!WurstClient.INSTANCE.getHax().antiWobbleHack.isEnabled())
 			return MathHelper.lerp(delta, first, second);
-		
+
 		return 0;
 	}
-	
+
 	@Inject(at = {@At("HEAD")},
 		method = {
 			"bobViewWhenHurt(Lnet/minecraft/client/util/math/MatrixStack;F)V"},
@@ -109,22 +109,22 @@ public abstract class GameRendererMixin
 		if(WurstClient.INSTANCE.getHax().noHurtcamHack.isEnabled())
 			ci.cancel();
 	}
-	
+
 	@Shadow
 	private void bobView(MatrixStack matrixStack, float partalTicks)
 	{
-		
+
 	}
-	
+
 	@Override
 	public void loadWurstShader(Identifier identifier)
 	{
 		loadShader(identifier);
 	}
-	
+
 	@Shadow
 	private void loadShader(Identifier identifier)
 	{
-		
+
 	}
 }

@@ -35,7 +35,7 @@ package net.wurstclient.analytics.dmurph;
  */
 public class AnalyticsConfigData
 {
-	
+
 	private final String trackingCode;
 	private String encoding = "UTF-8";
 	private String screenResolution = null;
@@ -44,7 +44,7 @@ public class AnalyticsConfigData
 	private String flashVersion = null;
 	private String userAgent = null;
 	private VisitorData visitorData;
-	
+
 	/**
 	 * constructs with the tracking code using the provided visitor data.
 	 *
@@ -57,7 +57,7 @@ public class AnalyticsConfigData
 		trackingCode = argTrackingCode;
 		this.visitorData = visitorData;
 	}
-	
+
 	/**
 	 * @return the colorDepth
 	 */
@@ -65,7 +65,7 @@ public class AnalyticsConfigData
 	{
 		return colorDepth;
 	}
-	
+
 	/**
 	 * @return the encoding
 	 */
@@ -73,7 +73,7 @@ public class AnalyticsConfigData
 	{
 		return encoding;
 	}
-	
+
 	/**
 	 * @return the flashVersion
 	 */
@@ -81,7 +81,7 @@ public class AnalyticsConfigData
 	{
 		return flashVersion;
 	}
-	
+
 	/**
 	 * @return the screenResolution
 	 */
@@ -89,7 +89,7 @@ public class AnalyticsConfigData
 	{
 		return screenResolution;
 	}
-	
+
 	/**
 	 * @return the trackingCode
 	 */
@@ -97,7 +97,7 @@ public class AnalyticsConfigData
 	{
 		return trackingCode;
 	}
-	
+
 	/**
 	 * @return the userLanguage
 	 */
@@ -105,7 +105,7 @@ public class AnalyticsConfigData
 	{
 		return userLanguage;
 	}
-	
+
 	/**
 	 * @return the user agent used for the network requests
 	 */
@@ -113,7 +113,7 @@ public class AnalyticsConfigData
 	{
 		return userAgent;
 	}
-	
+
 	/**
 	 * @return the visitor data, used to track unique visitors
 	 */
@@ -121,12 +121,12 @@ public class AnalyticsConfigData
 	{
 		return visitorData;
 	}
-	
+
 	public void setVisitorData(VisitorData visitorData)
 	{
 		this.visitorData = visitorData;
 	}
-	
+
 	/**
 	 * Sets the color depth of the user. like 32 bit.
 	 *
@@ -136,7 +136,7 @@ public class AnalyticsConfigData
 	{
 		colorDepth = argColorDepth;
 	}
-	
+
 	/**
 	 * Sets the character encoding of the client. like UTF-8
 	 *
@@ -147,7 +147,7 @@ public class AnalyticsConfigData
 	{
 		encoding = argEncoding;
 	}
-	
+
 	/**
 	 * Sets the flash version of the client, like "9.0 r24"
 	 *
@@ -158,7 +158,7 @@ public class AnalyticsConfigData
 	{
 		flashVersion = argFlashVersion;
 	}
-	
+
 	/**
 	 * Sets the screen resolution, like "1280x800".
 	 *
@@ -169,7 +169,7 @@ public class AnalyticsConfigData
 	{
 		screenResolution = argScreenResolution;
 	}
-	
+
 	/**
 	 * Sets the user language, like "EN-us"
 	 *
@@ -180,7 +180,7 @@ public class AnalyticsConfigData
 	{
 		userLanguage = argUserLanguage;
 	}
-	
+
 	public void setUserAgent(String userAgent)
 	{
 		this.userAgent = userAgent;

@@ -142,60 +142,60 @@ public final class HackList implements UpdateListener
 	public final TrueSightHack trueSightHack = new TrueSightHack();
 	public final TunnellerHack tunnellerHack = new TunnellerHack();
 	public final XRayHack xRayHack = new XRayHack();
-	
+
 	private final TreeMap<String, Hack> hax =
 		new TreeMap<>((o1, o2) -> o1.compareToIgnoreCase(o2));
 	private final EnabledHacksFile enabledHacksFile;
 	private final EventManager eventManager =
 		WurstClient.INSTANCE.getEventManager();
-	
+
 	public HackList(Path enabledHacksFile)
 	{
 		this.enabledHacksFile = new EnabledHacksFile(enabledHacksFile);
-		
+
 		try
 		{
 			for(Field field : HackList.class.getDeclaredFields())
 			{
 				if(!field.getName().endsWith("Hack"))
 					continue;
-				
+
 				Hack hack = (Hack)field.get(this);
 				hax.put(hack.getName(), hack);
 			}
-			
+
 		}catch(Exception e)
 		{
 			String message = "Initializing Wurst hacks";
 			CrashReport report = CrashReport.create(e, message);
 			throw new CrashException(report);
 		}
-		
+
 		eventManager.add(UpdateListener.class, this);
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
 		enabledHacksFile.load(this);
 		eventManager.remove(UpdateListener.class, this);
 	}
-	
+
 	public void saveEnabledHax()
 	{
 		enabledHacksFile.save(this);
 	}
-	
+
 	public Hack getHackByName(String name)
 	{
 		return hax.get(name);
 	}
-	
+
 	public Collection<Hack> getAllHax()
 	{
 		return Collections.unmodifiableCollection(hax.values());
 	}
-	
+
 	public int countHax()
 	{
 		return hax.size();

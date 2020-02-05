@@ -20,7 +20,7 @@ public class KeyBindingMixin implements IKeyBinding
 {
 	@Shadow
 	private InputUtil.KeyCode keyCode;
-	
+
 	@Override
 	public boolean isActallyPressed()
 	{

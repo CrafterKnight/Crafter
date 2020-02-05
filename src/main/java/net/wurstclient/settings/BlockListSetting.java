@@ -34,56 +34,56 @@ public final class BlockListSetting extends Setting
 {
 	private final ArrayList<String> blockNames = new ArrayList<>();
 	private final String[] defaultNames;
-	
+
 	public BlockListSetting(String name, String description, String... blocks)
 	{
 		super(name, description);
-		
+
 		Arrays.stream(blocks).parallel()
 			.map(s -> Registry.BLOCK.get(new Identifier(s)))
 			.filter(Objects::nonNull).map(BlockUtils::getName).distinct()
 			.sorted().forEachOrdered(s -> blockNames.add(s));
 		defaultNames = blockNames.toArray(new String[0]);
 	}
-	
+
 	public List<String> getBlockNames()
 	{
 		return Collections.unmodifiableList(blockNames);
 	}
-	
+
 	public void add(Block block)
 	{
 		String name = BlockUtils.getName(block);
 		if(Collections.binarySearch(blockNames, name) >= 0)
 			return;
-		
+
 		blockNames.add(name);
 		Collections.sort(blockNames);
 		WurstClient.INSTANCE.saveSettings();
 	}
-	
+
 	public void remove(int index)
 	{
 		if(index < 0 || index >= blockNames.size())
 			return;
-		
+
 		blockNames.remove(index);
 		WurstClient.INSTANCE.saveSettings();
 	}
-	
+
 	public void resetToDefaults()
 	{
 		blockNames.clear();
 		blockNames.addAll(Arrays.asList(defaultNames));
 		WurstClient.INSTANCE.saveSettings();
 	}
-	
+
 	@Override
 	public Component getComponent()
 	{
 		return new BlockListEditButton(this);
 	}
-	
+
 	@Override
 	public void fromJson(JsonElement json)
 	{
@@ -91,19 +91,19 @@ public final class BlockListSetting extends Setting
 		{
 			WsonArray wson = JsonUtils.getAsArray(json);
 			blockNames.clear();
-			
+
 			wson.getAllStrings().parallelStream()
 				.map(s -> Registry.BLOCK.get(new Identifier(s)))
 				.filter(Objects::nonNull).map(BlockUtils::getName).distinct()
 				.sorted().forEachOrdered(s -> blockNames.add(s));
-			
+
 		}catch(JsonException e)
 		{
 			e.printStackTrace();
 			resetToDefaults();
 		}
 	}
-	
+
 	@Override
 	public JsonElement toJson()
 	{
@@ -111,7 +111,7 @@ public final class BlockListSetting extends Setting
 		blockNames.forEach(s -> json.add(s));
 		return json;
 	}
-	
+
 	@Override
 	public Set<PossibleKeybind> getPossibleKeybinds(String featureName)
 	{

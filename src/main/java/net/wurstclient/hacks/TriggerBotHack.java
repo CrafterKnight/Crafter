@@ -42,7 +42,7 @@ public final class TriggerBotHack extends Hack implements UpdateListener
 {
 	private final SliderSetting range =
 		new SliderSetting("Range", 4.25, 1, 6, 0.05, ValueDisplay.DECIMAL);
-	
+
 	private final CheckboxSetting filterPlayers = new CheckboxSetting(
 		"Filter players", "Won't attack other players.", false);
 	private final CheckboxSetting filterSleeping = new CheckboxSetting(
@@ -53,14 +53,14 @@ public final class TriggerBotHack extends Hack implements UpdateListener
 				+ "distance above ground.",
 			0, 0, 2, 0.05,
 			v -> v == 0 ? "off" : ValueDisplay.DECIMAL.getValueString(v));
-	
+
 	private final CheckboxSetting filterMonsters = new CheckboxSetting(
 		"Filter monsters", "Won't attack zombies, creepers, etc.", false);
 	private final CheckboxSetting filterPigmen = new CheckboxSetting(
 		"Filter pigmen", "Won't attack zombie pigmen.", false);
 	private final CheckboxSetting filterEndermen =
 		new CheckboxSetting("Filter endermen", "Won't attack endermen.", false);
-	
+
 	private final CheckboxSetting filterAnimals = new CheckboxSetting(
 		"Filter animals", "Won't attack pigs, cows, etc.", false);
 	private final CheckboxSetting filterBabies =
@@ -69,16 +69,16 @@ public final class TriggerBotHack extends Hack implements UpdateListener
 	private final CheckboxSetting filterPets =
 		new CheckboxSetting("Filter pets",
 			"Won't attack tamed wolves,\n" + "tamed horses, etc.", false);
-	
+
 	private final CheckboxSetting filterVillagers = new CheckboxSetting(
 		"Filter villagers", "Won't attack villagers.", false);
 	private final CheckboxSetting filterGolems =
 		new CheckboxSetting("Filter golems",
 			"Won't attack iron golems,\n" + "snow golems and shulkers.", false);
-	
+
 	private final CheckboxSetting filterInvisible = new CheckboxSetting(
 		"Filter invisible", "Won't attack invisible entities.", false);
-	
+
 	public TriggerBotHack()
 	{
 		super("TriggerBot",
@@ -98,7 +98,7 @@ public final class TriggerBotHack extends Hack implements UpdateListener
 		addSetting(filterGolems);
 		addSetting(filterInvisible);
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
@@ -110,42 +110,42 @@ public final class TriggerBotHack extends Hack implements UpdateListener
 		WURST.getHax().multiAuraHack.setEnabled(false);
 		WURST.getHax().protectHack.setEnabled(false);
 		WURST.getHax().tpAuraHack.setEnabled(false);
-		
+
 		EVENTS.add(UpdateListener.class, this);
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
 		EVENTS.remove(UpdateListener.class, this);
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
 		ClientPlayerEntity player = MC.player;
 		if(player.getAttackCooldownProgress(0) < 1)
 			return;
-		
+
 		if(MC.crosshairTarget == null
 			|| !(MC.crosshairTarget instanceof EntityHitResult))
 			return;
-		
+
 		Entity target = ((EntityHitResult)MC.crosshairTarget).getEntity();
 		if(!isCorrectEntity(target))
 			return;
-		
+
 		WURST.getHax().autoSwordHack.setSlot();
-		
+
 		MC.interactionManager.attackEntity(player, target);
 		player.swingHand(Hand.MAIN_HAND);
 	}
-	
+
 	private boolean isCorrectEntity(Entity entity)
 	{
 		ClientPlayerEntity player = MC.player;
 		ClientWorld world = MC.world;
-		
+
 		double rangeSq = Math.pow(range.getValue(), 2);
 		Stream<LivingEntity> stream = Stream.of(entity)
 			.filter(e -> e instanceof LivingEntity).map(e -> (LivingEntity)e)
@@ -154,59 +154,59 @@ public final class TriggerBotHack extends Hack implements UpdateListener
 			.filter(e -> e != player)
 			.filter(e -> !(e instanceof FakePlayerEntity))
 			.filter(e -> !WURST.getFriends().contains(e.getEntityName()));
-		
+
 		if(filterPlayers.isChecked())
 			stream = stream.filter(e -> !(e instanceof PlayerEntity));
-		
+
 		if(filterSleeping.isChecked())
 			stream = stream.filter(e -> !(e instanceof PlayerEntity
 				&& ((PlayerEntity)e).isSleeping()));
-		
+
 		if(filterFlying.getValue() > 0)
 			stream = stream.filter(e -> {
-				
+
 				if(!(e instanceof PlayerEntity))
 					return true;
-				
+
 				Box box = e.getBoundingBox();
 				box = box.union(box.offset(0, -filterFlying.getValue(), 0));
 				return world.doesNotCollide(box);
 			});
-		
+
 		if(filterMonsters.isChecked())
 			stream = stream.filter(e -> !(e instanceof Monster));
-		
+
 		if(filterPigmen.isChecked())
 			stream = stream.filter(e -> !(e instanceof ZombiePigmanEntity));
-		
+
 		if(filterEndermen.isChecked())
 			stream = stream.filter(e -> !(e instanceof EndermanEntity));
-		
+
 		if(filterAnimals.isChecked())
 			stream = stream.filter(
 				e -> !(e instanceof AnimalEntity || e instanceof AmbientEntity
 					|| e instanceof WaterCreatureEntity));
-		
+
 		if(filterBabies.isChecked())
 			stream = stream.filter(e -> !(e instanceof PassiveEntity
 				&& ((PassiveEntity)e).isBaby()));
-		
+
 		if(filterPets.isChecked())
 			stream = stream
 				.filter(e -> !(e instanceof TameableEntity
 					&& ((TameableEntity)e).isTamed()))
 				.filter(e -> !(e instanceof HorseBaseEntity
 					&& ((HorseBaseEntity)e).isTame()));
-		
+
 		if(filterVillagers.isChecked())
 			stream = stream.filter(e -> !(e instanceof VillagerEntity));
-		
+
 		if(filterGolems.isChecked())
 			stream = stream.filter(e -> !(e instanceof GolemEntity));
-		
+
 		if(filterInvisible.isChecked())
 			stream = stream.filter(e -> !e.isInvisible());
-		
+
 		return stream.findFirst().isPresent();
 	}
 }

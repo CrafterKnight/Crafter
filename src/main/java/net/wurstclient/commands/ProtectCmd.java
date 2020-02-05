@@ -26,18 +26,18 @@ public final class ProtectCmd extends Command
 		super("protect", "Protects the given entity from other entities.",
 			".protect <entity>");
 	}
-	
+
 	@Override
 	public void call(String[] args) throws CmdException
 	{
 		if(args.length != 1)
 			throw new CmdSyntaxError();
-		
+
 		ProtectHack protectHack = WURST.getHax().protectHack;
-		
+
 		if(protectHack.isEnabled())
 			protectHack.setEnabled(false);
-		
+
 		Entity entity = StreamSupport
 			.stream(MC.world.getEntities().spliterator(), true)
 			.filter(e -> e instanceof LivingEntity)
@@ -48,11 +48,11 @@ public final class ProtectCmd extends Command
 			.min(
 				Comparator.comparingDouble(e -> MC.player.squaredDistanceTo(e)))
 			.orElse(null);
-		
+
 		if(entity == null)
 			throw new CmdError(
 				"Entity \"" + args[0] + "\" could not be found.");
-		
+
 		protectHack.setFriend(entity);
 		protectHack.setEnabled(true);
 	}

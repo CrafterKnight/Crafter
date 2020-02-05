@@ -22,13 +22,13 @@ import net.wurstclient.util.BlockBreaker;
 public final class AutoMineHack extends Hack implements UpdateListener
 {
 	private BlockPos currentBlock;
-	
+
 	public AutoMineHack()
 	{
 		super("AutoMine", "Automatically mines any block that you look at.");
 		setCategory(Category.BLOCKS);
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
@@ -37,26 +37,26 @@ public final class AutoMineHack extends Hack implements UpdateListener
 		WURST.getHax().nukerLegitHack.setEnabled(false);
 		WURST.getHax().speedNukerHack.setEnabled(false);
 		WURST.getHax().tunnellerHack.setEnabled(false);
-		
+
 		EVENTS.add(UpdateListener.class, this);
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
 		EVENTS.remove(UpdateListener.class, this);
 		stopMiningAndResetProgress();
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
 		setCurrentBlockFromHitResult();
-		
+
 		if(currentBlock != null)
 			breakCurrentBlock();
 	}
-	
+
 	private void setCurrentBlockFromHitResult()
 	{
 		if(MC.crosshairTarget == null || MC.crosshairTarget.getPos() == null
@@ -66,10 +66,10 @@ public final class AutoMineHack extends Hack implements UpdateListener
 			stopMiningAndResetProgress();
 			return;
 		}
-		
+
 		currentBlock = ((BlockHitResult)MC.crosshairTarget).getBlockPos();
 	}
-	
+
 	private void breakCurrentBlock()
 	{
 		if(MC.player.abilities.creativeMode)
@@ -77,12 +77,12 @@ public final class AutoMineHack extends Hack implements UpdateListener
 		else
 			BlockBreaker.breakOneBlock(currentBlock);
 	}
-	
+
 	private void stopMiningAndResetProgress()
 	{
 		if(currentBlock == null)
 			return;
-		
+
 		IMC.getInteractionManager().setBreakingBlock(true);
 		MC.interactionManager.cancelBlockBreaking();
 		currentBlock = null;

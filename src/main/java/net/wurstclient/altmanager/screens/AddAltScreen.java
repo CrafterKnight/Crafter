@@ -14,19 +14,19 @@ import net.wurstclient.altmanager.AltManager;
 public final class AddAltScreen extends AltEditorScreen
 {
 	private final AltManager altManager;
-	
+
 	public AddAltScreen(Screen prevScreen, AltManager altManager)
 	{
 		super(prevScreen, new LiteralText("New Alt"));
 		this.altManager = altManager;
 	}
-	
+
 	@Override
 	protected String getDoneButtonText()
 	{
 		return "Add";
 	}
-	
+
 	@Override
 	protected void pressDoneButton()
 	{

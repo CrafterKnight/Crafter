@@ -23,74 +23,74 @@ public final class HackListOtf extends OtherFeature
 			+ "of active hacks.\n"
 			+ "\u00a7lHidden\u00a7r mode renders nothing.",
 		Mode.values(), Mode.AUTO);
-	
+
 	private final EnumSetting<Position> position =
 		new EnumSetting<>("Position", Position.values(), Position.LEFT);
-	
+
 	private final CheckboxSetting animations =
 		new CheckboxSetting("Animations", true);
-	
+
 	public HackListOtf()
 	{
 		super("HackList", "Shows a list of active hacks on the screen.\n"
 			+ "The \u00a7lLeft\u00a7r position should only be used while TabGui is\n"
 			+ "disabled.");
-		
+
 		addSetting(mode);
 		addSetting(position);
 		addSetting(animations);
 	}
-	
+
 	public Mode getMode()
 	{
 		return mode.getSelected();
 	}
-	
+
 	public Position getPosition()
 	{
 		return position.getSelected();
 	}
-	
+
 	public boolean isAnimations()
 	{
 		return animations.isChecked();
 	}
-	
+
 	public static enum Mode
 	{
 		AUTO("Auto"),
-		
+
 		COUNT("Count"),
-		
+
 		HIDDEN("Hidden");
-		
+
 		private final String name;
-		
+
 		private Mode(String name)
 		{
 			this.name = name;
 		}
-		
+
 		@Override
 		public String toString()
 		{
 			return name;
 		}
 	}
-	
+
 	public static enum Position
 	{
 		LEFT("Left"),
-		
+
 		RIGHT("Right");
-		
+
 		private final String name;
-		
+
 		private Position(String name)
 		{
 			this.name = name;
 		}
-		
+
 		@Override
 		public String toString()
 		{

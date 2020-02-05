@@ -7,8 +7,8 @@
  */
 package net.wurstclient.hacks;
 
-import net.minecraft.server.network.packet.PlayerActionC2SPacket;
-import net.minecraft.server.network.packet.PlayerActionC2SPacket.Action;
+import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
+import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket.Action;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.wurstclient.Category;
@@ -31,7 +31,7 @@ public final class FastBreakHack extends Hack
 			+ "This is slower, but usually bypasses anti-cheat\n"
 			+ "plugins. Use it if regular FastBreak is not\n" + "working.",
 		false);
-	
+
 	public FastBreakHack()
 	{
 		super("FastBreak", "Allows you to break blocks faster.\n"
@@ -39,7 +39,7 @@ public final class FastBreakHack extends Hack
 		setCategory(Category.BLOCKS);
 		addSetting(legitMode);
 	}
-	
+
 	@Override
 	public String getRenderName()
 	{
@@ -48,38 +48,38 @@ public final class FastBreakHack extends Hack
 		else
 			return getName();
 	}
-	
+
 	@Override
 	protected void onEnable()
 	{
 		EVENTS.add(UpdateListener.class, this);
 		EVENTS.add(BlockBreakingProgressListener.class, this);
 	}
-	
+
 	@Override
 	protected void onDisable()
 	{
 		EVENTS.remove(UpdateListener.class, this);
 		EVENTS.remove(BlockBreakingProgressListener.class, this);
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
 		IMC.getInteractionManager().setBlockHitDelay(0);
 	}
-	
+
 	@Override
 	public void onBlockBreakingProgress(BlockBreakingProgressEvent event)
 	{
 		if(legitMode.isChecked())
 			return;
-		
+
 		IClientPlayerInteractionManager im = IMC.getInteractionManager();
-		
+
 		if(im.getCurrentBreakingProgress() >= 1)
 			return;
-		
+
 		Action action = PlayerActionC2SPacket.Action.STOP_DESTROY_BLOCK;
 		BlockPos blockPos = event.getBlockPos();
 		Direction direction = event.getDirection();

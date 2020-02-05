@@ -21,30 +21,30 @@ public final class AutoSprintHack extends Hack implements UpdateListener
 		super("AutoSprint", "Makes you sprint automatically.");
 		setCategory(Category.MOVEMENT);
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
 		EVENTS.add(UpdateListener.class, this);
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
 		EVENTS.remove(UpdateListener.class, this);
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
 		ClientPlayerEntity player = MC.player;
-		
+
 		if(player.horizontalCollision || player.isSneaking())
 			return;
-		
+
 		if(player.isWet() || player.isSubmergedInWater())
 			return;
-		
+
 		if(player.forwardSpeed > 0)
 			player.setSprinting(true);
 	}

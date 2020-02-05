@@ -24,24 +24,24 @@ public final class AutoSwitchHack extends Hack implements UpdateListener
 			+ "blocks in your hotbar.");
 		setCategory(Category.ITEMS);
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
 		EVENTS.add(UpdateListener.class, this);
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
 		EVENTS.remove(UpdateListener.class, this);
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
 		PlayerInventory inventory = MC.player.inventory;
-		
+
 		if(inventory.selectedSlot == 8)
 			inventory.selectedSlot = 0;
 		else

@@ -98,7 +98,7 @@ public class JGoogleAnalyticsTracker
 		 */
 		SINGLE_THREAD
 	}
-	
+
 	private static Logger logger =
 		Logger.getLogger(JGoogleAnalyticsTracker.class.getName());
 	private static final ThreadGroup asyncThreadGroup =
@@ -108,33 +108,33 @@ public class JGoogleAnalyticsTracker
 	private static LinkedList<String> fifo = new LinkedList<>();
 	private static volatile Thread backgroundThread = null;
 	// the thread used in 'queued' mode.
-	
+
 	private static boolean backgroundThreadMayRun = false;
-	
+
 	static
 	{
 		asyncThreadGroup.setMaxPriority(Thread.MIN_PRIORITY);
 		asyncThreadGroup.setDaemon(true);
 		JGoogleAnalyticsTracker.setProxy(System.getenv("http_proxy"));
 	}
-	
+
 	public static enum GoogleAnalyticsVersion
 	{
 		V_4_7_2
 	}
-	
+
 	private GoogleAnalyticsVersion gaVersion;
 	private AnalyticsConfigData configData;
 	private IGoogleAnalyticsURLBuilder builder;
 	private DispatchMode mode;
 	private boolean enabled;
-	
+
 	public JGoogleAnalyticsTracker(AnalyticsConfigData argConfigData,
 		GoogleAnalyticsVersion argVersion)
 	{
 		this(argConfigData, argVersion, DispatchMode.SINGLE_THREAD);
 	}
-	
+
 	public JGoogleAnalyticsTracker(AnalyticsConfigData argConfigData,
 		GoogleAnalyticsVersion argVersion, DispatchMode argMode)
 	{
@@ -144,7 +144,7 @@ public class JGoogleAnalyticsTracker
 		enabled = true;
 		setDispatchMode(argMode);
 	}
-	
+
 	/**
 	 * Sets the dispatch mode
 	 *
@@ -162,7 +162,7 @@ public class JGoogleAnalyticsTracker
 			startBackgroundThread();
 		mode = argMode;
 	}
-	
+
 	/**
 	 * Gets the current dispatch mode. Default is
 	 * {@link DispatchMode#SINGLE_THREAD}.
@@ -174,7 +174,7 @@ public class JGoogleAnalyticsTracker
 	{
 		return mode;
 	}
-	
+
 	/**
 	 * Convenience method to check if the tracker is in synchronous mode.
 	 *
@@ -184,7 +184,7 @@ public class JGoogleAnalyticsTracker
 	{
 		return mode == DispatchMode.SYNCHRONOUS;
 	}
-	
+
 	/**
 	 * Convenience method to check if the tracker is in single-thread mode
 	 *
@@ -194,7 +194,7 @@ public class JGoogleAnalyticsTracker
 	{
 		return mode == DispatchMode.SINGLE_THREAD;
 	}
-	
+
 	/**
 	 * Convenience method to check if the tracker is in multi-thread mode
 	 *
@@ -204,7 +204,7 @@ public class JGoogleAnalyticsTracker
 	{
 		return mode == DispatchMode.MULTI_THREAD;
 	}
-	
+
 	/**
 	 * Resets the session cookie.
 	 */
@@ -212,7 +212,7 @@ public class JGoogleAnalyticsTracker
 	{
 		builder.resetSession();
 	}
-	
+
 	/**
 	 * Sets if the api dispatches tracking requests.
 	 *
@@ -222,7 +222,7 @@ public class JGoogleAnalyticsTracker
 	{
 		enabled = argEnabled;
 	}
-	
+
 	/**
 	 * If the api is dispatching tracking requests (default of true).
 	 *
@@ -232,7 +232,7 @@ public class JGoogleAnalyticsTracker
 	{
 		return enabled;
 	}
-	
+
 	/**
 	 * Define the proxy to use for all GA tracking requests.
 	 * <p>
@@ -245,7 +245,7 @@ public class JGoogleAnalyticsTracker
 	{
 		proxy = argProxy != null ? argProxy : Proxy.NO_PROXY;
 	}
-	
+
 	/**
 	 * Define the proxy to use for all GA tracking requests.
 	 * <p>
@@ -266,14 +266,14 @@ public class JGoogleAnalyticsTracker
 			{
 				s.findInLine("(http://|)([^:/]+)(:|)([0-9]*)(/|)");
 				MatchResult m = s.match();
-				
+
 				if(m.groupCount() >= 2)
 					proxyAddr = m.group(2);
-				
+
 				if(m.groupCount() >= 4 && !(m.group(4).length() == 0))
 					proxyPort = Integer.parseInt(m.group(4));
 			}
-			
+
 			if(proxyAddr != null)
 			{
 				SocketAddress sa = new InetSocketAddress(proxyAddr, proxyPort);
@@ -281,7 +281,7 @@ public class JGoogleAnalyticsTracker
 			}
 		}
 	}
-	
+
 	/**
 	 * Wait for background tasks to complete.
 	 * <p>
@@ -292,10 +292,10 @@ public class JGoogleAnalyticsTracker
 	 */
 	public static void completeBackgroundTasks(long timeoutMillis)
 	{
-		
+
 		boolean fifoEmpty = false;
 		boolean asyncThreadsCompleted = false;
-		
+
 		long absTimeout = System.currentTimeMillis() + timeoutMillis;
 		while(System.currentTimeMillis() < absTimeout)
 		{
@@ -303,15 +303,15 @@ public class JGoogleAnalyticsTracker
 			{
 				fifoEmpty = fifo.size() == 0;
 			}
-			
+
 			synchronized(JGoogleAnalyticsTracker.class)
 			{
 				asyncThreadsCompleted = asyncThreadsRunning == 0;
 			}
-			
+
 			if(fifoEmpty && asyncThreadsCompleted)
 				break;
-			
+
 			try
 			{
 				Thread.sleep(100);
@@ -321,7 +321,7 @@ public class JGoogleAnalyticsTracker
 			}
 		}
 	}
-	
+
 	/**
 	 * Tracks a page view.
 	 *
@@ -346,7 +346,7 @@ public class JGoogleAnalyticsTracker
 		data.setPageURL(argPageURL);
 		makeCustomRequest(data);
 	}
-	
+
 	/**
 	 * Tracks a page view.
 	 *
@@ -377,7 +377,7 @@ public class JGoogleAnalyticsTracker
 		data.setReferrer(argReferrerSite, argReferrerPage);
 		makeCustomRequest(data);
 	}
-	
+
 	/**
 	 * Tracks a page view.
 	 *
@@ -408,7 +408,7 @@ public class JGoogleAnalyticsTracker
 		data.setSearchReferrer(argSearchSource, argSearchKeywords);
 		makeCustomRequest(data);
 	}
-	
+
 	/**
 	 * Tracks an event. To provide more info about the page, use
 	 * {@link #makeCustomRequest(AnalyticsRequestData)}.
@@ -420,7 +420,7 @@ public class JGoogleAnalyticsTracker
 	{
 		trackEvent(argCategory, argAction, null, null);
 	}
-	
+
 	/**
 	 * Tracks an event. To provide more info about the page, use
 	 * {@link #makeCustomRequest(AnalyticsRequestData)}.
@@ -434,7 +434,7 @@ public class JGoogleAnalyticsTracker
 	{
 		trackEvent(argCategory, argAction, argLabel, null);
 	}
-	
+
 	/**
 	 * Tracks an event. To provide more info about the page, use
 	 * {@link #makeCustomRequest(AnalyticsRequestData)}.
@@ -456,10 +456,10 @@ public class JGoogleAnalyticsTracker
 		data.setEventAction(argAction);
 		data.setEventLabel(argLabel);
 		data.setEventValue(argValue);
-		
+
 		makeCustomRequest(data);
 	}
-	
+
 	/**
 	 * Makes a custom tracking request based from the given data.
 	 *
@@ -481,7 +481,7 @@ public class JGoogleAnalyticsTracker
 			throw new NullPointerException("Class was not initialized");
 		final String url = builder.buildURL(argData);
 		final String userAgent = configData.getUserAgent();
-		
+
 		switch(mode)
 		{
 			case MULTI_THREAD:
@@ -526,7 +526,7 @@ public class JGoogleAnalyticsTracker
 			break;
 		}
 	}
-	
+
 	private static void dispatchRequest(String argURL, String userAgent)
 	{
 		try
@@ -553,7 +553,7 @@ public class JGoogleAnalyticsTracker
 			logger.log(Level.SEVERE, "Error making tracking request", e);
 		}
 	}
-	
+
 	private void createBuilder()
 	{
 		switch(gaVersion)
@@ -566,7 +566,7 @@ public class JGoogleAnalyticsTracker
 			break;
 		}
 	}
-	
+
 	/**
 	 * If the background thread for 'queued' mode is not running, start it now.
 	 */
@@ -587,12 +587,12 @@ public class JGoogleAnalyticsTracker
 							try
 							{
 								String url = null;
-								
+
 								synchronized(fifo)
 								{
 									if(fifo.isEmpty())
 										fifo.wait();
-									
+
 									if(!fifo.isEmpty())
 										// Get a reference to the oldest element
 										// in
@@ -601,7 +601,7 @@ public class JGoogleAnalyticsTracker
 										// it is processed.
 										url = fifo.getFirst();
 								}
-								
+
 								if(url != null)
 									try
 									{
@@ -625,16 +625,16 @@ public class JGoogleAnalyticsTracker
 							}
 					}
 				};
-			
+
 			// Don't prevent the application from terminating.
 			// Use completeBackgroundTasks() before exit if you want to ensure
 			// that all pending GA requests are sent.
 			backgroundThread.setDaemon(true);
-			
+
 			backgroundThread.start();
 		}
 	}
-	
+
 	/**
 	 * Stop the long-lived background thread.
 	 * <p>
@@ -659,7 +659,7 @@ public class JGoogleAnalyticsTracker
 			backgroundThread = null;
 		}
 	}
-	
+
 	public AnalyticsConfigData getConfigData()
 	{
 		return configData;

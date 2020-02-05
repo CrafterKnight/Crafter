@@ -25,10 +25,10 @@ public final class LoginManager
 		YggdrasilUserAuthentication auth =
 			(YggdrasilUserAuthentication)new YggdrasilAuthenticationService(
 				Proxy.NO_PROXY, "").createUserAuthentication(Agent.MINECRAFT);
-		
+
 		auth.setUsername(email);
 		auth.setPassword(password);
-		
+
 		try
 		{
 			auth.logIn();
@@ -37,28 +37,28 @@ public final class LoginManager
 					auth.getSelectedProfile().getId().toString(),
 					auth.getAuthenticatedToken(), "mojang"));
 			return "";
-			
+
 		}catch(AuthenticationUnavailableException e)
 		{
 			return "\u00a74\u00a7lCannot contact authentication server!";
-			
+
 		}catch(AuthenticationException e)
 		{
 			e.printStackTrace();
-			
+
 			if(e.getMessage().contains("Invalid username or password.")
 				|| e.getMessage().toLowerCase().contains("account migrated"))
 				return "\u00a74\u00a7lWrong password! (or shadowbanned)";
 			else
 				return "\u00a74\u00a7lCannot contact authentication server!";
-			
+
 		}catch(NullPointerException e)
 		{
 			e.printStackTrace();
 			return "\u00a74\u00a7lWrong password! (or shadowbanned)";
 		}
 	}
-	
+
 	public static void changeCrackedName(String newName)
 	{
 		WurstClient.IMC.setSession(new Session(newName, "", "", "mojang"));

@@ -28,28 +28,28 @@ public class MultiplayerScreenMixin extends Screen implements IMultiplayerScreen
 {
 	@Shadow
 	protected MultiplayerServerListWidget serverListWidget;
-	
+
 	private MultiplayerScreenMixin(WurstClient wurst, Text text_1)
 	{
 		super(text_1);
 	}
-	
+
 	@Override
 	public MultiplayerServerListWidget getServerListSelector()
 	{
 		return serverListWidget;
 	}
-	
+
 	@Inject(at = {@At("TAIL")}, method = {"init()V"})
 	private void onInit(CallbackInfo ci)
 	{
 		if(!WurstClient.INSTANCE.isEnabled())
 			return;
-		
+
 		addButton(new ButtonWidget(width / 2 + 154 + 4, height - 52, 100, 20,
 			"Server Finder", b -> minecraft.openScreen(
 				new ServerFinderScreen((MultiplayerScreen)(Object)this))));
-		
+
 		addButton(new ButtonWidget(width / 2 + 154 + 4, height - 28, 100, 20,
 			"Clean Up", b -> minecraft.openScreen(
 				new CleanUpScreen((MultiplayerScreen)(Object)this))));

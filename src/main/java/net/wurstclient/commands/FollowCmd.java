@@ -25,18 +25,18 @@ public final class FollowCmd extends Command
 	{
 		super("follow", "Follows the given entity.", ".follow <entity>");
 	}
-	
+
 	@Override
 	public void call(String[] args) throws CmdException
 	{
 		if(args.length != 1)
 			throw new CmdSyntaxError();
-		
+
 		FollowHack followHack = WURST.getHax().followHack;
-		
+
 		if(followHack.isEnabled())
 			followHack.setEnabled(false);
-		
+
 		Entity entity = StreamSupport
 			.stream(MC.world.getEntities().spliterator(), true)
 			.filter(e -> e instanceof LivingEntity)
@@ -47,11 +47,11 @@ public final class FollowCmd extends Command
 			.min(
 				Comparator.comparingDouble(e -> MC.player.squaredDistanceTo(e)))
 			.orElse(null);
-		
+
 		if(entity == null)
 			throw new CmdError(
 				"Entity \"" + args[0] + "\" could not be found.");
-		
+
 		followHack.setEntity(entity);
 		followHack.setEnabled(true);
 	}

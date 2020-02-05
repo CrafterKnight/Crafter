@@ -18,25 +18,25 @@ public final class JumpCmd extends Command
 	{
 		super("jump", "Makes you jump.");
 	}
-	
+
 	@Override
 	public void call(String[] args) throws CmdException
 	{
 		if(args.length != 0)
 			throw new CmdSyntaxError();
-		
+
 		if(!MC.player.onGround && !WURST.getHax().jetpackHack.isEnabled())
 			throw new CmdError("Can't jump in mid-air.");
-		
+
 		MC.player.jump();
 	}
-	
+
 	@Override
 	public String getPrimaryAction()
 	{
 		return "Jump";
 	}
-	
+
 	@Override
 	public void doPrimaryAction()
 	{

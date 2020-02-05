@@ -25,36 +25,36 @@ public abstract class SignEditScreenMixin extends Screen
 {
 	@Shadow
 	private SignBlockEntity sign;
-	
+
 	private SignEditScreenMixin(WurstClient wurst, Text text_1)
 	{
 		super(text_1);
 	}
-	
+
 	@Inject(at = {@At("HEAD")}, method = {"init()V"})
 	private void onInit(CallbackInfo ci)
 	{
 		AutoSignHack autoSignHack = WurstClient.INSTANCE.getHax().autoSignHack;
-		
+
 		Text[] autoSignText = autoSignHack.getSignText();
 		if(autoSignText == null)
 			return;
-		
+
 		for(int i = 0; i < 4; i++)
 			sign.text[i] = autoSignText[i];
-		
+
 		finishEditing();
 	}
-	
+
 	@Inject(at = {@At("HEAD")}, method = {"finishEditing()V"})
 	private void onFinishEditing(CallbackInfo ci)
 	{
 		WurstClient.INSTANCE.getHax().autoSignHack.setSignText(sign.text);
 	}
-	
+
 	@Shadow
 	private void finishEditing()
 	{
-		
+
 	}
 }

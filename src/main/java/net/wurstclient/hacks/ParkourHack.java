@@ -23,41 +23,41 @@ public final class ParkourHack extends Hack implements UpdateListener
 			"Makes you jump automatically when reaching\n"
 				+ "the edge of a block.\n"
 				+ "Useful for parkours and jump'n'runs.");
-		
+
 		setCategory(Category.MOVEMENT);
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
 		WURST.getHax().safeWalkHack.setEnabled(false);
 		EVENTS.add(UpdateListener.class, this);
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
 		EVENTS.remove(UpdateListener.class, this);
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
 		if(!MC.player.onGround || MC.options.keyJump.isPressed())
 			return;
-		
+
 		if(MC.player.isSneaking() || MC.options.keySneak.isPressed())
 			return;
-		
+
 		Box box = MC.player.getBoundingBox();
 		Box adjustedBox = box.offset(0, -0.5, 0).expand(-0.001, 0, -0.001);
-		
+
 		Stream<VoxelShape> blockCollisions =
 			MC.world.getBlockCollisions(MC.player, adjustedBox);
-		
+
 		if(blockCollisions.findAny().isPresent())
 			return;
-		
+
 		MC.player.jump();
 	}
 }

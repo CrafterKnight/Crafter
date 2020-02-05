@@ -12,7 +12,7 @@ import java.util.Random;
 public final class NameGenerator
 {
 	private static final Random random = new Random();
-	
+
 	public static String generateName()
 	{
 		String name = "";
@@ -22,7 +22,7 @@ public final class NameGenerator
 		int usedConsonants = 0;
 		int usedVowels = 0;
 		String lastLetter = "blah";
-		
+
 		for(int i = 0; i < nameLength; i++)
 		{
 			String nextLetter = lastLetter;
@@ -51,7 +51,7 @@ public final class NameGenerator
 			lastLetter = nextLetter;
 			name = name.concat(nextLetter);
 		}
-		
+
 		int capitalMode = (int)Math.round(Math.random() * 2);
 		if(capitalMode == 1)
 			name = name.substring(0, 1).toUpperCase() + name.substring(1);
@@ -63,7 +63,7 @@ public final class NameGenerator
 						+ (i == nameLength ? "" : name.substring(i + 1));
 		int numberLength = (int)Math.round(Math.random() * 3) + 1;
 		int numberMode = (int)Math.round(Math.random() * 3);
-		
+
 		boolean number = random.nextBoolean();
 		if(number)
 			if(numberLength == 1)
@@ -100,7 +100,7 @@ public final class NameGenerator
 				}
 				name = name.concat(Integer.toString(nextNumber));
 			}
-		
+
 		boolean leet = !number && random.nextBoolean();
 		if(leet)
 		{
@@ -150,7 +150,7 @@ public final class NameGenerator
 				}
 			}
 		}
-		
+
 		int special = (int)Math.round(Math.random() * 8);
 		if(special == 3)
 			name = "xX".concat(name).concat("Xx");
@@ -158,7 +158,7 @@ public final class NameGenerator
 			name = name.concat("LP");
 		else if(special == 5)
 			name = name.concat("HD");
-		
+
 		return name;
 	}
 }

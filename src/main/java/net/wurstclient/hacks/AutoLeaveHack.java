@@ -7,9 +7,9 @@
  */
 package net.wurstclient.hacks;
 
-import net.minecraft.server.network.packet.ChatMessageC2SPacket;
-import net.minecraft.server.network.packet.PlayerInteractEntityC2SPacket;
-import net.minecraft.server.network.packet.PlayerMoveC2SPacket;
+import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
+import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
+import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.wurstclient.Category;
 import net.wurstclient.SearchTags;
 import net.wurstclient.events.UpdateListener;
@@ -27,7 +27,7 @@ public final class AutoLeaveHack extends Hack implements UpdateListener
 			+ "reaches this value or falls below it.",
 		4, 0.5, 9.5, 0.5,
 		v -> ValueDisplay.DECIMAL.getValueString(v) + " hearts");
-	
+
 	public final EnumSetting<Mode> mode = new EnumSetting<>("Mode",
 		"\u00a7lQuit\u00a7r mode just quits the game normally.\n"
 			+ "Bypasses NoCheat+ but not CombatLog.\n\n"
@@ -42,95 +42,95 @@ public final class AutoLeaveHack extends Hack implements UpdateListener
 			+ "and the target. This causes the server to kick you.\n"
 			+ "Bypasses both CombatLog and NoCheat+.",
 		Mode.values(), Mode.QUIT);
-	
+
 	public AutoLeaveHack()
 	{
 		super("AutoLeave",
 			"Automatically leaves the server\n" + "when your health is low.");
-		
+
 		setCategory(Category.COMBAT);
 		addSetting(health);
 		addSetting(mode);
 	}
-	
+
 	@Override
 	public String getRenderName()
 	{
 		return getName() + " [" + mode.getSelected() + "]";
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
 		EVENTS.add(UpdateListener.class, this);
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
 		EVENTS.remove(UpdateListener.class, this);
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
 		// check gamemode
 		if(MC.player.abilities.creativeMode)
 			return;
-		
+
 		// check for other players
 		if(MC.isInSingleplayer()
 			&& MC.player.networkHandler.getPlayerList().size() == 1)
 			return;
-		
+
 		// check health
 		if(MC.player.getHealth() > health.getValueF() * 2F)
 			return;
-		
+
 		// leave server
 		switch(mode.getSelected())
 		{
 			case QUIT:
 			MC.world.disconnect();
 			break;
-			
+
 			case CHARS:
 			MC.player.networkHandler
 				.sendPacket(new ChatMessageC2SPacket("\u00a7"));
 			break;
-			
+
 			case TELEPORT:
 			MC.player.networkHandler.sendPacket(
 				new PlayerMoveC2SPacket.PositionOnly(3.1e7, 100, 3.1e7, false));
 			break;
-			
+
 			case SELFHURT:
 			MC.player.networkHandler
 				.sendPacket(new PlayerInteractEntityC2SPacket(MC.player));
 			break;
 		}
-		
+
 		// disable
 		setEnabled(false);
 	}
-	
+
 	public static enum Mode
 	{
 		QUIT("Quit"),
-		
+
 		CHARS("Chars"),
-		
+
 		TELEPORT("TP"),
-		
+
 		SELFHURT("SelfHurt");
-		
+
 		private final String name;
-		
+
 		private Mode(String name)
 		{
 			this.name = name;
 		}
-		
+
 		@Override
 		public String toString()
 		{

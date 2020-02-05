@@ -16,7 +16,7 @@ public interface CameraTransformViewBobbingListener extends Listener
 {
 	public void onCameraTransformViewBobbing(
 		CameraTransformViewBobbingEvent event);
-	
+
 	public static class CameraTransformViewBobbingEvent
 		extends CancellableEvent<CameraTransformViewBobbingListener>
 	{
@@ -27,12 +27,12 @@ public interface CameraTransformViewBobbingListener extends Listener
 			for(CameraTransformViewBobbingListener listener : listeners)
 			{
 				listener.onCameraTransformViewBobbing(this);
-				
+
 				if(isCancelled())
 					break;
 			}
 		}
-		
+
 		@Override
 		public Class<CameraTransformViewBobbingListener> getListenerType()
 		{

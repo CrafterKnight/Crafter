@@ -18,7 +18,7 @@ import net.wurstclient.hack.Hack;
 public final class AutoSignHack extends Hack
 {
 	private Text[] signText;
-	
+
 	public AutoSignHack()
 	{
 		super("AutoSign",
@@ -27,18 +27,18 @@ public final class AutoSignHack extends Hack
 				+ "the first sign to specify the text for all other signs.");
 		setCategory(Category.BLOCKS);
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
 		signText = null;
 	}
-	
+
 	public Text[] getSignText()
 	{
 		return signText;
 	}
-	
+
 	public void setSignText(Text[] signText)
 	{
 		if(isEnabled() && this.signText == null)

@@ -27,7 +27,7 @@ public class ChunkOcclusionGraphBuilderMixin
 	{
 		SetOpaqueCubeEvent event = new SetOpaqueCubeEvent();
 		WurstClient.INSTANCE.getEventManager().fire(event);
-		
+
 		if(event.isCancelled())
 			ci.cancel();
 	}

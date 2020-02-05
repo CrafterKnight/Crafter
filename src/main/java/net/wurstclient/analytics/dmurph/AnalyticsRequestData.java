@@ -33,7 +33,7 @@ package net.wurstclient.analytics.dmurph;
  */
 public class AnalyticsRequestData
 {
-	
+
 	private String pageTitle = null;
 	private String hostName = null;
 	private String pageURL = null;
@@ -65,14 +65,14 @@ public class AnalyticsRequestData
 	// utmcsr=rolwheels.com|utmccn=(referral)|utmcmd=referral|utmcct=/rol_dhuez_wheels.php
 	// search:
 	// utmcsr=google|utmccn=(organic)|utmcmd=organic|utmctr=rol%20wheels
-	
+
 	// utmcsr%3D(direct)%7Cutmccn%D(direct)%7utmcmd%3D(none)
 	private String utmcsr = "(direct)";
 	private String utmccn = "(direct)";
 	private String utmctr = null;
 	private String utmcmd = "(none)";
 	private String utmcct = null;
-	
+
 	public void setReferrer(String argSite, String argPage)
 	{
 		utmcmd = "referral";
@@ -81,7 +81,7 @@ public class AnalyticsRequestData
 		utmcsr = argSite;
 		utmctr = null;
 	}
-	
+
 	public void setSearchReferrer(String argSearchSource,
 		String argSearchKeywords)
 	{
@@ -91,7 +91,7 @@ public class AnalyticsRequestData
 		utmccn = "(organic)";
 		utmcct = null;
 	}
-	
+
 	/**
 	 * @return the utmcsr
 	 */
@@ -99,7 +99,7 @@ public class AnalyticsRequestData
 	{
 		return utmcsr;
 	}
-	
+
 	/**
 	 * @return the utmccn
 	 */
@@ -107,7 +107,7 @@ public class AnalyticsRequestData
 	{
 		return utmccn;
 	}
-	
+
 	/**
 	 * @return the utmctr
 	 */
@@ -115,7 +115,7 @@ public class AnalyticsRequestData
 	{
 		return utmctr;
 	}
-	
+
 	/**
 	 * @return the utmcmd
 	 */
@@ -123,7 +123,7 @@ public class AnalyticsRequestData
 	{
 		return utmcmd;
 	}
-	
+
 	/**
 	 * @return the utmcct
 	 */
@@ -131,7 +131,7 @@ public class AnalyticsRequestData
 	{
 		return utmcct;
 	}
-	
+
 	/**
 	 * @return the eventAction
 	 */
@@ -139,7 +139,7 @@ public class AnalyticsRequestData
 	{
 		return eventAction;
 	}
-	
+
 	/**
 	 * @return the eventCategory
 	 */
@@ -147,7 +147,7 @@ public class AnalyticsRequestData
 	{
 		return eventCategory;
 	}
-	
+
 	/**
 	 * @return the eventLabel
 	 */
@@ -155,7 +155,7 @@ public class AnalyticsRequestData
 	{
 		return eventLabel;
 	}
-	
+
 	/**
 	 * @return the eventValue
 	 */
@@ -163,7 +163,7 @@ public class AnalyticsRequestData
 	{
 		return eventValue;
 	}
-	
+
 	/**
 	 * @return the hostName
 	 */
@@ -171,7 +171,7 @@ public class AnalyticsRequestData
 	{
 		return hostName;
 	}
-	
+
 	/**
 	 * @return the contentTitle
 	 */
@@ -179,7 +179,7 @@ public class AnalyticsRequestData
 	{
 		return pageTitle;
 	}
-	
+
 	/**
 	 * @return the pageURL
 	 */
@@ -187,7 +187,7 @@ public class AnalyticsRequestData
 	{
 		return pageURL;
 	}
-	
+
 	/**
 	 * Sets the event action, which is required for
 	 * tracking events.
@@ -199,7 +199,7 @@ public class AnalyticsRequestData
 	{
 		eventAction = argEventAction;
 	}
-	
+
 	/**
 	 * Sets the event category, which is required for
 	 * tracking events.
@@ -211,7 +211,7 @@ public class AnalyticsRequestData
 	{
 		eventCategory = argEventCategory;
 	}
-	
+
 	/**
 	 * Sets the event label, which is optional for
 	 * tracking events.
@@ -223,7 +223,7 @@ public class AnalyticsRequestData
 	{
 		eventLabel = argEventLabel;
 	}
-	
+
 	/**
 	 * Sets the event value, which is optional for tracking
 	 * events.
@@ -235,7 +235,7 @@ public class AnalyticsRequestData
 	{
 		eventValue = argEventValue;
 	}
-	
+
 	/**
 	 * The host name of the page
 	 *
@@ -246,7 +246,7 @@ public class AnalyticsRequestData
 	{
 		hostName = argHostName;
 	}
-	
+
 	/**
 	 * Sets the page title, which will be the Content Title
 	 * in Google Analytics
@@ -258,7 +258,7 @@ public class AnalyticsRequestData
 	{
 		pageTitle = argContentTitle;
 	}
-	
+
 	/**
 	 * The page url, which is required. Traditionally
 	 * this is of the form "/content/page.html", but you can

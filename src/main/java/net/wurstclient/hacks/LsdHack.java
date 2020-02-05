@@ -22,7 +22,7 @@ public final class LsdHack extends Hack
 		super("LSD", "Causes hallucinations.");
 		setCategory(Category.FUN);
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
@@ -31,14 +31,14 @@ public final class LsdHack extends Hack
 			setEnabled(false);
 			return;
 		}
-		
+
 		if(MC.gameRenderer.getShader() != null)
 			MC.gameRenderer.disableShader();
-		
+
 		((IGameRenderer)MC.gameRenderer)
 			.loadWurstShader(new Identifier("shaders/post/wobble.json"));
 	}
-	
+
 	@Override
 	public void onDisable()
 	{

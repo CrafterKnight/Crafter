@@ -18,39 +18,39 @@ public final class WurstLogoOtf extends OtherFeature
 {
 	private final EnumSetting<Visibility> visibility =
 		new EnumSetting<>("Visibility", Visibility.values(), Visibility.ALWAYS);
-	
+
 	public WurstLogoOtf()
 	{
 		super("WurstLogo", "Shows the Wurst logo and version on the screen.");
 		addSetting(visibility);
 	}
-	
+
 	public boolean isVisible()
 	{
 		return visibility.getSelected().isVisible();
 	}
-	
+
 	public static enum Visibility
 	{
 		ALWAYS("Always", () -> true),
-		
+
 		ONLY_OUTDATED("Only when outdated",
 			() -> WURST.getUpdater().isOutdated());
-		
+
 		private final String name;
 		private final BooleanSupplier visible;
-		
+
 		private Visibility(String name, BooleanSupplier visible)
 		{
 			this.name = name;
 			this.visible = visible;
 		}
-		
+
 		public boolean isVisible()
 		{
 			return visible.getAsBoolean();
 		}
-		
+
 		@Override
 		public String toString()
 		{

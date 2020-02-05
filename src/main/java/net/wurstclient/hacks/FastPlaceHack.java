@@ -21,19 +21,19 @@ public final class FastPlaceHack extends Hack implements UpdateListener
 			+ "Tip: This can speed up other hacks like AutoBuild.");
 		setCategory(Category.BLOCKS);
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
 		EVENTS.add(UpdateListener.class, this);
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
 		EVENTS.remove(UpdateListener.class, this);
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{

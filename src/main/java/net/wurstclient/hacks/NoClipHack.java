@@ -28,7 +28,7 @@ public final class NoClipHack extends Hack implements UpdateListener,
 			+ "\u00a7c\u00a7lWARNING:\u00a7r You will take damage while moving through blocks!");
 		setCategory(Category.MOVEMENT);
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
@@ -37,7 +37,7 @@ public final class NoClipHack extends Hack implements UpdateListener,
 		EVENTS.add(IsNormalCubeListener.class, this);
 		EVENTS.add(SetOpaqueCubeListener.class, this);
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
@@ -45,43 +45,43 @@ public final class NoClipHack extends Hack implements UpdateListener,
 		EVENTS.remove(PlayerMoveListener.class, this);
 		EVENTS.remove(IsNormalCubeListener.class, this);
 		EVENTS.remove(SetOpaqueCubeListener.class, this);
-		
+
 		MC.player.noClip = false;
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
 		ClientPlayerEntity player = MC.player;
-		
+
 		player.noClip = true;
 		player.fallDistance = 0;
 		player.onGround = false;
-		
+
 		player.abilities.flying = false;
 		player.setVelocity(0, 0, 0);
-		
+
 		float speed = 0.2F;
 		player.flyingSpeed = speed;
-		
+
 		if(MC.options.keyJump.isPressed())
 			player.addVelocity(0, speed, 0);
 		if(MC.options.keySneak.isPressed())
 			player.addVelocity(0, -speed, 0);
 	}
-	
+
 	@Override
 	public void onPlayerMove(IClientPlayerEntity player)
 	{
 		player.setNoClip(true);
 	}
-	
+
 	@Override
 	public void onIsNormalCube(IsNormalCubeEvent event)
 	{
 		event.cancel();
 	}
-	
+
 	@Override
 	public void onSetOpaqueCube(SetOpaqueCubeEvent event)
 	{

@@ -31,86 +31,86 @@ public abstract class ContainerScreen54Mixin
 	@Shadow
 	@Final
 	private int rows;
-	
+
 	private final AutoStealHack autoSteal =
 		WurstClient.INSTANCE.getHax().autoStealHack;
 	private int mode;
-	
+
 	public ContainerScreen54Mixin(WurstClient wurst, GenericContainer container,
 		PlayerInventory playerInventory, Text name)
 	{
 		super(container, playerInventory, name);
 	}
-	
+
 	@Override
 	protected void init()
 	{
 		super.init();
-		
+
 		if(!WurstClient.INSTANCE.isEnabled())
 			return;
-		
+
 		if(autoSteal.areButtonsVisible())
 		{
 			addButton(new ButtonWidget(x + containerWidth - 108, y + 4, 50, 12,
 				"Steal", b -> steal()));
-			
+
 			addButton(new ButtonWidget(x + containerWidth - 56, y + 4, 50, 12,
 				"Store", b -> store()));
 		}
-		
+
 		if(autoSteal.isEnabled())
 			steal();
 	}
-	
+
 	private void steal()
 	{
 		runInThread(() -> shiftClickSlots(0, rows * 9, 1));
 	}
-	
+
 	private void store()
 	{
 		runInThread(() -> shiftClickSlots(rows * 9, rows * 9 + 44, 2));
 	}
-	
+
 	private void runInThread(Runnable r)
 	{
 		new Thread(() -> {
 			try
 			{
 				r.run();
-				
+
 			}catch(Exception e)
 			{
 				e.printStackTrace();
 			}
 		}).start();
 	}
-	
+
 	private void shiftClickSlots(int from, int to, int mode)
 	{
 		this.mode = mode;
-		
+
 		for(int i = from; i < to; i++)
 		{
 			Slot slot = container.slots.get(i);
 			if(slot.getStack().isEmpty())
 				continue;
-			
+
 			waitForDelay();
 			if(this.mode != mode || minecraft.currentScreen == null)
 				break;
-			
+
 			onMouseClick(slot, slot.id, 0, SlotActionType.QUICK_MOVE);
 		}
 	}
-	
+
 	private void waitForDelay()
 	{
 		try
 		{
 			Thread.sleep(autoSteal.getDelay());
-			
+
 		}catch(InterruptedException e)
 		{
 			throw new RuntimeException(e);

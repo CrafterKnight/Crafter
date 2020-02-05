@@ -19,13 +19,13 @@ public final class ReachHack extends Hack
 		super("Reach", "Allows you to reach further.");
 		setCategory(Category.OTHER);
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
 		IMC.getInteractionManager().setOverrideReach(true);
 	}
-	
+
 	@Override
 	public void onDisable()
 	{

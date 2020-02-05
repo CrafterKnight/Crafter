@@ -17,7 +17,7 @@ public final class LeaveCmd extends Command
 	{
 		super("leave", "Instantly disconnects from the server.", ".leave");
 	}
-	
+
 	@Override
 	public void call(String[] args) throws CmdException
 	{
@@ -26,16 +26,16 @@ public final class LeaveCmd extends Command
 				MC.player.sendChatMessage("Taco!");
 		else if(args.length != 0)
 			throw new CmdSyntaxError();
-		
+
 		MC.world.disconnect();
 	}
-	
+
 	@Override
 	public String getPrimaryAction()
 	{
 		return "Leave";
 	}
-	
+
 	@Override
 	public void doPrimaryAction()
 	{

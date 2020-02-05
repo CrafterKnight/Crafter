@@ -23,7 +23,7 @@ public final class KeybindProcessor implements KeyPressListener
 	private final HackList hax;
 	private final KeybindList keybinds;
 	private final CmdProcessor cmdProcessor;
-	
+
 	public KeybindProcessor(HackList hax, KeybindList keybinds,
 		CmdProcessor cmdProcessor)
 	{
@@ -31,39 +31,39 @@ public final class KeybindProcessor implements KeyPressListener
 		this.keybinds = keybinds;
 		this.cmdProcessor = cmdProcessor;
 	}
-	
+
 	@Override
 	public void onKeyPress(KeyPressEvent event)
 	{
 		if(event.getAction() != GLFW.GLFW_PRESS)
 			return;
-		
+
 		Screen screen = WurstClient.MC.currentScreen;
 		if(screen != null && !(screen instanceof ClickGuiScreen))
 			return;
-		
+
 		String keyName = getKeyName(event);
 		String cmds = keybinds.getCommands(keyName);
 		processCmds(cmds);
 	}
-	
+
 	private String getKeyName(KeyPressEvent event)
 	{
 		int keyCode = event.getKeyCode();
 		int scanCode = event.getScanCode();
 		return InputUtil.getKeyCode(keyCode, scanCode).getName();
 	}
-	
+
 	private void processCmds(String cmds)
 	{
 		if(cmds == null)
 			return;
-		
+
 		cmds = cmds.replace(";", "\u00a7").replace("\u00a7\u00a7", ";");
 		for(String cmd : cmds.split("\u00a7"))
 			processCmd(cmd.trim());
 	}
-	
+
 	private void processCmd(String cmd)
 	{
 		if(cmd.startsWith("."))
@@ -73,7 +73,7 @@ public final class KeybindProcessor implements KeyPressListener
 		else
 		{
 			Hack hack = hax.getHackByName(cmd);
-			
+
 			if(hack != null)
 				hack.setEnabled(!hack.isEnabled());
 			else

@@ -34,19 +34,19 @@ package net.wurstclient.analytics.dmurph;
  */
 public interface IGoogleAnalyticsURLBuilder
 {
-	
+
 	/**
 	 * Reset the session cookie.
 	 */
 	public void resetSession();
-	
+
 	/**
 	 * Gets the version for this builder.
 	 *
 	 * @return
 	 */
 	public String getGoogleAnalyticsVersion();
-	
+
 	/**
 	 * Build the url request from the data.
 	 *

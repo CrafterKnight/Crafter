@@ -20,16 +20,16 @@ public final class VClipCmd extends Command
 		super("vclip", "Lets you clip through blocks vertically.\n"
 			+ "The maximum distance is 10 blocks.", ".vclip <height>");
 	}
-	
+
 	@Override
 	public void call(String[] args) throws CmdException
 	{
 		if(args.length != 1)
 			throw new CmdSyntaxError();
-		
+
 		if(!MathUtils.isInteger(args[0]))
 			throw new CmdSyntaxError();
-		
+
 		ClientPlayerEntity player = MC.player;
 		player.updatePosition(player.getX(),
 			player.getY() + Integer.parseInt(args[0]), player.getZ());

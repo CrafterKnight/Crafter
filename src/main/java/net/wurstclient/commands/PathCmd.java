@@ -31,15 +31,15 @@ public final class PathCmd extends Command
 {
 	private final CheckboxSetting debugMode =
 		new CheckboxSetting("Debug mode", false);
-	
+
 	private final CheckboxSetting depthTest =
 		new CheckboxSetting("Depth test", false);
-	
+
 	private PathFinder pathFinder;
 	private boolean enabled;
 	private long startTime;
 	private BlockPos lastGoal;
-	
+
 	public PathCmd()
 	{
 		super("path",
@@ -47,11 +47,11 @@ public final class PathCmd extends Command
 				+ "Useful for labyrinths and caves.",
 			".path <x> <y> <z>", ".path <entity>", ".path -debug",
 			".path -depth", ".path -refresh", "Turn off: .path");
-		
+
 		addSetting(debugMode);
 		addSetting(depthTest);
 	}
-	
+
 	@Override
 	public void call(String[] args) throws CmdException
 	{
@@ -65,31 +65,31 @@ public final class PathCmd extends Command
 				ChatUtils.message("Debug mode "
 					+ (debugMode.isChecked() ? "on" : "off") + ".");
 				return;
-				
+
 				case "-depth":
 				depthTest.setChecked(!depthTest.isChecked());
 				ChatUtils.message("Depth test "
 					+ (depthTest.isChecked() ? "on" : "off") + ".");
 				return;
-				
+
 				case "-refresh":
 				if(lastGoal == null)
 					throw new CmdError("Cannot refresh: no previous path.");
 				refresh = true;
 				break;
 			}
-		
+
 		// disable if enabled
 		if(enabled)
 		{
 			EVENTS.remove(UpdateListener.class, this);
 			EVENTS.remove(RenderListener.class, this);
 			enabled = false;
-			
+
 			if(args.length == 0)
 				return;
 		}
-		
+
 		// set PathFinder
 		final BlockPos goal;
 		if(refresh)
@@ -100,7 +100,7 @@ public final class PathCmd extends Command
 			lastGoal = goal;
 		}
 		pathFinder = new PathFinder(goal);
-		
+
 		// start
 		enabled = true;
 		EVENTS.add(UpdateListener.class, this);
@@ -108,22 +108,22 @@ public final class PathCmd extends Command
 		System.out.println("Finding path...");
 		startTime = System.nanoTime();
 	}
-	
+
 	private BlockPos argsToPos(String... args) throws CmdException
 	{
 		switch(args.length)
 		{
 			default:
 			throw new CmdSyntaxError("Invalid coordinates.");
-			
+
 			case 1:
 			return argsToEntityPos(args[0]);
-			
+
 			case 3:
 			return argsToXyzPos(args);
 		}
 	}
-	
+
 	private BlockPos argsToEntityPos(String name) throws CmdError
 	{
 		LivingEntity entity = StreamSupport
@@ -136,20 +136,20 @@ public final class PathCmd extends Command
 			.min(
 				Comparator.comparingDouble(e -> MC.player.squaredDistanceTo(e)))
 			.orElse(null);
-		
+
 		if(entity == null)
 			throw new CmdError("Entity \"" + name + "\" could not be found.");
-		
+
 		return new BlockPos(entity);
 	}
-	
+
 	private BlockPos argsToXyzPos(String... xyz) throws CmdSyntaxError
 	{
 		BlockPos playerPos = new BlockPos(MC.player);
 		int[] player =
 			new int[]{playerPos.getX(), playerPos.getY(), playerPos.getZ()};
 		int[] pos = new int[3];
-		
+
 		for(int i = 0; i < 3; i++)
 			if(MathUtils.isInteger(xyz[i]))
 				pos[i] = Integer.parseInt(xyz[i]);
@@ -160,17 +160,17 @@ public final class PathCmd extends Command
 				pos[i] = player[i] + Integer.parseInt(xyz[i].substring(1));
 			else
 				throw new CmdSyntaxError("Invalid coordinates.");
-			
+
 		return new BlockPos(pos[0], pos[1], pos[2]);
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
 		double passedTime = (System.nanoTime() - startTime) / 1e6;
 		pathFinder.think();
 		boolean foundPath = pathFinder.isDone();
-		
+
 		// stop if done or failed
 		if(foundPath || pathFinder.isFailed())
 		{
@@ -179,9 +179,9 @@ public final class PathCmd extends Command
 				path = pathFinder.formatPath();
 			else
 				ChatUtils.error("Could not find a path.");
-			
+
 			EVENTS.remove(UpdateListener.class, this);
-			
+
 			System.out.println("Done after " + passedTime + "ms");
 			if(debugMode.isChecked())
 				System.out.println("Length: " + path.size() + ", processed: "
@@ -190,23 +190,23 @@ public final class PathCmd extends Command
 					+ pathFinder.getCost(pathFinder.getCurrentPos()));
 		}
 	}
-	
+
 	@Override
 	public void onRender(float partialTicks)
 	{
 		pathFinder.renderPath(debugMode.isChecked(), depthTest.isChecked());
 	}
-	
+
 	public BlockPos getLastGoal()
 	{
 		return lastGoal;
 	}
-	
+
 	public boolean isDebugMode()
 	{
 		return debugMode.isChecked();
 	}
-	
+
 	public boolean isDepthTest()
 	{
 		return depthTest.isChecked();

@@ -13,11 +13,11 @@ public abstract class CmdException extends Exception
 	{
 		super();
 	}
-	
+
 	public CmdException(String message)
 	{
 		super(message);
 	}
-	
+
 	public abstract void printToChat(Command cmd);
 }

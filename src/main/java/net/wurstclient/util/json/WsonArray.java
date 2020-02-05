@@ -18,19 +18,19 @@ import com.google.gson.JsonElement;
 public final class WsonArray
 {
 	private final JsonArray json;
-	
+
 	public WsonArray(JsonArray json)
 	{
 		this.json = Objects.requireNonNull(json);
 	}
-	
+
 	public ArrayList<String> getAllStrings()
 	{
 		return StreamSupport.stream(json.spliterator(), false)
 			.filter(JsonUtils::isString).map(JsonElement::getAsString)
 			.collect(Collectors.toCollection(() -> new ArrayList<>()));
 	}
-	
+
 	public ArrayList<WsonObject> getAllObjects()
 	{
 		return StreamSupport.stream(json.spliterator(), false)
@@ -38,7 +38,7 @@ public final class WsonArray
 			.map(json -> new WsonObject(json))
 			.collect(Collectors.toCollection(() -> new ArrayList<>()));
 	}
-	
+
 	public JsonArray toJsonArray()
 	{
 		return json;

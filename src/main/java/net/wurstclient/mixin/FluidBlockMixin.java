@@ -28,7 +28,7 @@ public abstract class FluidBlockMixin extends Block implements FluidDrainable
 	{
 		super(block$Settings_1);
 	}
-	
+
 	@Override
 	public VoxelShape getCollisionShape(BlockState blockState_1,
 		BlockView blockView_1, BlockPos blockPos_1,
@@ -37,7 +37,7 @@ public abstract class FluidBlockMixin extends Block implements FluidDrainable
 		HackList hax = WurstClient.INSTANCE.getHax();
 		if(hax != null && hax.jesusHack.shouldBeSolid())
 			return VoxelShapes.fullCube();
-		
+
 		return super.getCollisionShape(blockState_1, blockView_1, blockPos_1,
 			entityContext_1);
 	}

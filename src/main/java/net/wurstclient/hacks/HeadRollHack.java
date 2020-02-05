@@ -7,7 +7,7 @@
  */
 package net.wurstclient.hacks;
 
-import net.minecraft.server.network.packet.PlayerMoveC2SPacket;
+import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.util.math.MathHelper;
 import net.wurstclient.Category;
 import net.wurstclient.SearchTags;
@@ -23,29 +23,29 @@ public final class HeadRollHack extends Hack implements UpdateListener
 			"Makes you nod all the time.\n" + "Only visible to other players.");
 		setCategory(Category.FUN);
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
 		// disable incompatible derps
 		WURST.getHax().derpHack.setEnabled(false);
 		WURST.getHax().tiredHack.setEnabled(false);
-		
+
 		EVENTS.add(UpdateListener.class, this);
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
 		EVENTS.remove(UpdateListener.class, this);
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
 		float timer = MC.player.age % 20 / 10F;
 		float pitch = MathHelper.sin(timer * (float)Math.PI) * 90F;
-		
+
 		MC.player.networkHandler.sendPacket(new PlayerMoveC2SPacket.LookOnly(
 			MC.player.yaw, pitch, MC.player.onGround));
 	}

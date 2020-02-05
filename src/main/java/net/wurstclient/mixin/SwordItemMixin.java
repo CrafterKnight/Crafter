@@ -23,17 +23,17 @@ public class SwordItemMixin extends ToolItem implements ISwordItem
 	@Shadow
 	@Final
 	protected float attackDamage;
-	
+
 	@Shadow
 	@Final
 	protected float attackSpeed;
-	
+
 	private SwordItemMixin(WurstClient wurst, ToolMaterial material,
 		Settings settings)
 	{
 		super(material, settings);
 	}
-	
+
 	@Override
 	public float getAttackSpeed()
 	{

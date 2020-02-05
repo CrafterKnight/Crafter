@@ -10,6 +10,6 @@ package net.wurstclient.mixinterface;
 public interface IMiningToolItem
 {
 	public float getAttackDamage();
-	
+
 	public float getAttackSpeed();
 }

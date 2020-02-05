@@ -22,13 +22,13 @@ public final class NavigatorHack extends Hack
 		super("Navigator",
 			"A searchable GUI that learns your preferences over time.");
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
 		if(!(MC.currentScreen instanceof NavigatorMainScreen))
 			MC.openScreen(new NavigatorMainScreen());
-		
+
 		setEnabled(false);
 	}
 }

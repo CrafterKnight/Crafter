@@ -30,7 +30,7 @@ public abstract class CactusBlockMixin extends Block
 	{
 		super(block$Settings_1);
 	}
-	
+
 	@Inject(at = {@At("HEAD")},
 		method = {
 			"getCollisionShape(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/entity/EntityContext;)Lnet/minecraft/util/shape/VoxelShape;"},
@@ -42,10 +42,10 @@ public abstract class CactusBlockMixin extends Block
 		EventManager events = WurstClient.INSTANCE.getEventManager();
 		if(events == null)
 			return;
-		
+
 		CactusCollisionShapeEvent event = new CactusCollisionShapeEvent();
 		events.fire(event);
-		
+
 		VoxelShape collisionShape = event.getCollisionShape();
 		if(collisionShape != null)
 			cir.setReturnValue(collisionShape);

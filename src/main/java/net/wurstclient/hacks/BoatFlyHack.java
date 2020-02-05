@@ -22,26 +22,26 @@ public final class BoatFlyHack extends Hack implements UpdateListener
 		super("BoatFly", "Allows you to fly with boats");
 		setCategory(Category.MOVEMENT);
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
 		EVENTS.add(UpdateListener.class, this);
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
 		EVENTS.remove(UpdateListener.class, this);
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
 		// check if riding
 		if(!MC.player.hasVehicle())
 			return;
-		
+
 		// fly
 		Entity vehicle = MC.player.getVehicle();
 		Vec3d velocity = vehicle.getVelocity();

@@ -21,13 +21,13 @@ public final class ChangelogOtf extends OtherFeature
 	{
 		super("Changelog", "Opens the changelog in your browser.");
 	}
-	
+
 	@Override
 	public String getPrimaryAction()
 	{
 		return "View Changelog";
 	}
-	
+
 	@Override
 	public void doPrimaryAction()
 	{

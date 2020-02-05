@@ -25,7 +25,7 @@ public abstract class DeathScreenMixin extends Screen
 	{
 		super(text_1);
 	}
-	
+
 	@Inject(at = {@At(value = "TAIL")}, method = {"tick()V"})
 	private void onTick(CallbackInfo ci)
 	{

@@ -34,7 +34,7 @@ public class FluidRendererMixin
 		BlockState state = blockView_1.getBlockState(blockPos_1);
 		ShouldDrawSideEvent event = new ShouldDrawSideEvent(state);
 		WurstClient.INSTANCE.getEventManager().fire(event);
-		
+
 		if(event.isRendered() != null)
 			cir.setReturnValue(!event.isRendered());
 	}

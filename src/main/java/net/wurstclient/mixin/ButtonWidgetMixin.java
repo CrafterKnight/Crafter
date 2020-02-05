@@ -22,7 +22,7 @@ public abstract class ButtonWidgetMixin extends AbstractPressableButtonWidget
 	{
 		super(i, j, k, l, string);
 	}
-	
+
 	@Override
 	protected void renderBg(MinecraftClient client, int mouseX, int mouseY)
 	{

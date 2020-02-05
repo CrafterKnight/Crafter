@@ -20,17 +20,17 @@ public final class TCmd extends Command
 		super("t", "Toggles a hack.", ".t <hack> [on|off]", "Examples:",
 			"Toggle Nuker: .t Nuker", "Disable Nuker: .t Nuker off");
 	}
-	
+
 	@Override
 	public void call(String[] args) throws CmdException
 	{
 		if(args.length < 1 || args.length > 2)
 			throw new CmdSyntaxError();
-		
+
 		Hack hack = WURST.getHax().getHackByName(args[0]);
 		if(hack == null)
 			throw new CmdError("Unknown hack: " + args[0]);
-		
+
 		if(args.length == 1)
 			hack.setEnabled(!hack.isEnabled());
 		else
@@ -39,11 +39,11 @@ public final class TCmd extends Command
 				case "on":
 				hack.setEnabled(true);
 				break;
-				
+
 				case "off":
 				hack.setEnabled(false);
 				break;
-				
+
 				default:
 				throw new CmdSyntaxError();
 			}

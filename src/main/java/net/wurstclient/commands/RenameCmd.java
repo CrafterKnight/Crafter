@@ -23,26 +23,26 @@ public final class RenameCmd extends Command
 			"Use $ for colors, use $$ for $.", "Example:", ".rename $cRed Name",
 			"(changes the item's name to \u00a7cRed Name\u00a7r)");
 	}
-	
+
 	@Override
 	public void call(String[] args) throws CmdException
 	{
 		if(!MC.player.abilities.creativeMode)
 			throw new CmdError("Creative mode only.");
-		
+
 		if(args.length == 0)
 			throw new CmdSyntaxError();
-		
+
 		String message = args[0];
 		for(int i = 1; i < args.length; i++)
 			message += " " + args[i];
-		
+
 		message = message.replace("$", "�").replace("��", "$");
 		ItemStack item = MC.player.inventory.getMainHandStack();
-		
+
 		if(item == null)
 			throw new CmdError("There is no item in your hand.");
-		
+
 		item.setCustomName(new LiteralText(message));
 		ChatUtils.message("Renamed item to \"" + message + "�r\".");
 	}

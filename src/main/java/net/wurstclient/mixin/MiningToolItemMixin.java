@@ -23,23 +23,23 @@ public class MiningToolItemMixin extends ToolItem implements IMiningToolItem
 	@Shadow
 	@Final
 	protected float attackDamage;
-	
+
 	@Shadow
 	@Final
 	protected float attackSpeed;
-	
+
 	private MiningToolItemMixin(WurstClient wurst, ToolMaterial material,
 		Settings settings)
 	{
 		super(material, settings);
 	}
-	
+
 	@Override
 	public float getAttackDamage()
 	{
 		return attackDamage;
 	}
-	
+
 	@Override
 	public float getAttackSpeed()
 	{

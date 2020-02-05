@@ -28,93 +28,93 @@ public final class BlockSetting extends Setting
 {
 	private String blockName = "";
 	private final String defaultName;
-	
+
 	public BlockSetting(String name, String description, String blockName)
 	{
 		super(name, description);
-		
+
 		Block block = BlockUtils.getBlockFromName(blockName);
 		Objects.requireNonNull(block);
 		this.blockName = BlockUtils.getName(block);
-		
+
 		defaultName = this.blockName;
 	}
-	
+
 	public BlockSetting(String name, String blockName)
 	{
 		this(name, "", blockName);
 	}
-	
+
 	public Block getBlock()
 	{
 		return BlockUtils.getBlockFromName(blockName);
 	}
-	
+
 	public String getBlockName()
 	{
 		return blockName;
 	}
-	
+
 	public void setBlock(Block block)
 	{
 		if(block == null || block instanceof AirBlock)
 			return;
-		
+
 		String newName = Objects.requireNonNull(BlockUtils.getName(block));
-		
+
 		if(blockName.equals(newName))
 			return;
-		
+
 		blockName = newName;
 		WurstClient.INSTANCE.saveSettings();
 	}
-	
+
 	public void setBlockName(String blockName)
 	{
 		Block block = BlockUtils.getBlockFromName(blockName);
 		Objects.requireNonNull(block);
-		
+
 		setBlock(block);
 	}
-	
+
 	public void resetToDefault()
 	{
 		blockName = defaultName;
 		WurstClient.INSTANCE.saveSettings();
 	}
-	
+
 	@Override
 	public Component getComponent()
 	{
 		return new BlockComponent(this);
 	}
-	
+
 	@Override
 	public void fromJson(JsonElement json)
 	{
 		try
 		{
 			String newName = JsonUtils.getAsString(json);
-			
+
 			Block newBlock = BlockUtils.getBlockFromName(newName);
 			if(newBlock == null || newBlock instanceof AirBlock)
 				throw new JsonException();
-			
+
 			blockName = BlockUtils.getName(newBlock);
-			
+
 		}catch(JsonException e)
 		{
 			e.printStackTrace();
 			resetToDefault();
 		}
 	}
-	
+
 	@Override
 	public JsonElement toJson()
 	{
 		return new JsonPrimitive(blockName);
 	}
-	
+
 	@Override
 	public Set<PossibleKeybind> getPossibleKeybinds(String featureName)
 	{

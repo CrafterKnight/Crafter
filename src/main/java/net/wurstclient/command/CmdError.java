@@ -15,7 +15,7 @@ public final class CmdError extends CmdException
 	{
 		super(message);
 	}
-	
+
 	@Override
 	public void printToChat(Command cmd)
 	{

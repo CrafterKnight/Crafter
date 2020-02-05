@@ -25,7 +25,7 @@ public class WalkPathProcessor extends PathProcessor
 	{
 		super(path);
 	}
-	
+
 	@Override
 	public void process()
 	{
@@ -39,17 +39,17 @@ public class WalkPathProcessor extends PathProcessor
 			pos = new BlockPos(WurstClient.MC.player);
 		PathPos nextPos = path.get(index);
 		int posIndex = path.indexOf(pos);
-		
+
 		if(posIndex == -1)
 			ticksOffPath++;
 		else
 			ticksOffPath = 0;
-		
+
 		// update index
 		if(pos.equals(nextPos))
 		{
 			index++;
-			
+
 			// disable when done
 			if(index >= path.size())
 				done = true;
@@ -57,23 +57,23 @@ public class WalkPathProcessor extends PathProcessor
 		}else if(posIndex > index)
 		{
 			index = posIndex + 1;
-			
+
 			// disable when done
 			if(index >= path.size())
 				done = true;
 			return;
 		}
-		
+
 		lockControls();
 		WurstClient.MC.player.abilities.flying = false;
-		
+
 		// face next position
 		facePosition(nextPos);
 		if(MathHelper
 			.wrapDegrees(Math.abs(RotationUtils.getHorizontalAngleToLookVec(
 				new Vec3d(nextPos).add(0.5, 0.5, 0.5)))) > 90)
 			return;
-		
+
 		if(WURST.getHax().jesusHack.isEnabled())
 		{
 			// wait for Jesus to swim up
@@ -81,7 +81,7 @@ public class WalkPathProcessor extends PathProcessor
 				&& (WurstClient.MC.player.isTouchingWater()
 					|| WurstClient.MC.player.isInLava()))
 				return;
-			
+
 			// manually swim down if using Jesus
 			if(WurstClient.MC.player.getY() - nextPos.getY() > 0.5
 				&& (WurstClient.MC.player.isTouchingWater()
@@ -89,16 +89,16 @@ public class WalkPathProcessor extends PathProcessor
 					|| WURST.getHax().jesusHack.isOverLiquid()))
 				MC.options.keySneak.setPressed(true);
 		}
-		
+
 		// horizontal movement
 		if(pos.getX() != nextPos.getX() || pos.getZ() != nextPos.getZ())
 		{
 			MC.options.keyForward.setPressed(true);
-			
+
 			if(index > 0 && path.get(index - 1).isJumping()
 				|| pos.getY() < nextPos.getY())
 				MC.options.keyJump.setPressed(true);
-			
+
 			// vertical movement
 		}else if(pos.getY() != nextPos.getY())
 			// go up
@@ -111,20 +111,20 @@ public class WalkPathProcessor extends PathProcessor
 				{
 					WURST.getRotationFaker().faceVectorClientIgnorePitch(
 						BlockUtils.getBoundingBox(pos).getCenter());
-					
+
 					MC.options.keyForward.setPressed(true);
-					
+
 				}else
 				{
 					// directional jump
 					if(index < path.size() - 1
 						&& !nextPos.up().equals(path.get(index + 1)))
 						index++;
-					
+
 					// jump up
 					MC.options.keyJump.setPressed(true);
 				}
-				
+
 				// go down
 			}else
 			{
@@ -132,7 +132,7 @@ public class WalkPathProcessor extends PathProcessor
 				while(index < path.size() - 1
 					&& path.get(index).down().equals(path.get(index + 1)))
 					index++;
-				
+
 				// walk off the edge
 				if(WurstClient.MC.player.onGround)
 					MC.options.keyForward.setPressed(true);

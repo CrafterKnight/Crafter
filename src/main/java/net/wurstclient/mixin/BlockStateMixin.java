@@ -39,7 +39,7 @@ public class BlockStateMixin extends AbstractState<Block, BlockState>
 	{
 		super(object_1, immutableMap_1);
 	}
-	
+
 	@Inject(at = {@At("TAIL")},
 		method = {
 			"isSimpleFullBlock(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;)Z"},
@@ -48,10 +48,10 @@ public class BlockStateMixin extends AbstractState<Block, BlockState>
 	{
 		IsNormalCubeEvent event = new IsNormalCubeEvent();
 		WurstClient.INSTANCE.getEventManager().fire(event);
-		
+
 		cir.setReturnValue(cir.getReturnValue() && !event.isCancelled());
 	}
-	
+
 	@Inject(at = {@At("TAIL")},
 		method = {
 			"getAmbientOcclusionLightLevel(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;)F"},
@@ -62,11 +62,11 @@ public class BlockStateMixin extends AbstractState<Block, BlockState>
 		GetAmbientOcclusionLightLevelEvent event =
 			new GetAmbientOcclusionLightLevelEvent((BlockState)(Object)this,
 				cir.getReturnValueF());
-		
+
 		WurstClient.INSTANCE.getEventManager().fire(event);
 		cir.setReturnValue(event.getLightLevel());
 	}
-	
+
 	@Inject(at = {@At("HEAD")},
 		method = {
 			"getOutlineShape(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/entity/EntityContext;)Lnet/minecraft/util/shape/VoxelShape;"},
@@ -76,15 +76,15 @@ public class BlockStateMixin extends AbstractState<Block, BlockState>
 	{
 		if(context == EntityContext.absent())
 			return;
-		
+
 		HackList hax = WurstClient.INSTANCE.getHax();
 		if(hax == null)
 			return;
-		
+
 		HandNoClipHack handNoClipHack = hax.handNoClipHack;
 		if(!handNoClipHack.isEnabled() || handNoClipHack.isBlockInList(pos))
 			return;
-		
+
 		cir.setReturnValue(VoxelShapes.empty());
 	}
 }

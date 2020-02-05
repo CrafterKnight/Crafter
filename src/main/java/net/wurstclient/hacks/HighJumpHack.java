@@ -20,16 +20,16 @@ public final class HighJumpHack extends Hack
 		"Jump height in blocks.\n"
 			+ "This gets very inaccurate at higher values.",
 		6, 1, 100, 1, ValueDisplay.INTEGER);
-	
+
 	public HighJumpHack()
 	{
 		super("HighJump", "Allows you to jump higher.\n\n"
 			+ "\u00a7c\u00a7lWARNING:\u00a7r You will take fall damage if you don't use NoFall.");
-		
+
 		setCategory(Category.MOVEMENT);
 		addSetting(height);
 	}
-	
+
 	public float getAdditionalJumpMotion()
 	{
 		return isEnabled() ? height.getValueF() * 0.1F : 0;

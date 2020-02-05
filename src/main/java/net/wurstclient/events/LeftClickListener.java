@@ -15,7 +15,7 @@ import net.wurstclient.event.Listener;
 public interface LeftClickListener extends Listener
 {
 	public void onLeftClick(LeftClickEvent event);
-	
+
 	public static class LeftClickEvent
 		extends CancellableEvent<LeftClickListener>
 	{
@@ -25,12 +25,12 @@ public interface LeftClickListener extends Listener
 			for(LeftClickListener listener : listeners)
 			{
 				listener.onLeftClick(this);
-				
+
 				if(isCancelled())
 					break;
 			}
 		}
-		
+
 		@Override
 		public Class<LeftClickListener> getListenerType()
 		{

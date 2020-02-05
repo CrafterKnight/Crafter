@@ -21,12 +21,12 @@ import net.wurstclient.util.json.WsonObject;
 public final class AnalyticsConfigFile
 {
 	private final Path path;
-	
+
 	public AnalyticsConfigFile(Path path)
 	{
 		this.path = path;
 	}
-	
+
 	public void load(WurstAnalyticsTracker tracker)
 	{
 		try
@@ -34,57 +34,57 @@ public final class AnalyticsConfigFile
 			WsonObject wson = JsonUtils.parseFileToObject(path);
 			tracker.setEnabled(wson.getBoolean("enabled"));
 			tracker.getConfigData().setVisitorData(readVisitorData(wson));
-			
+
 		}catch(NoSuchFileException e)
 		{
 			// The file doesn't exist yet. No problem, we'll create it later.
-			
+
 		}catch(IOException | JsonException e)
 		{
 			System.out.println("Couldn't load " + path.getFileName());
 			e.printStackTrace();
 		}
-		
+
 		save(tracker);
 	}
-	
+
 	private VisitorData readVisitorData(WsonObject wson) throws JsonException
 	{
 		int visitorID = wson.getInt("id");
 		long firstLaunch = wson.getLong("first_launch");
 		long lastLaunch = wson.getLong("last_launch");
 		int launches = wson.getInt("launches");
-		
+
 		return VisitorData.newSession(visitorID, firstLaunch, lastLaunch,
 			launches);
 	}
-	
+
 	public void save(WurstAnalyticsTracker tracker)
 	{
 		JsonObject json = createJson(tracker);
-		
+
 		try
 		{
 			JsonUtils.toJson(json, path);
-			
+
 		}catch(IOException | JsonException e)
 		{
 			System.out.println("Couldn't save " + path.getFileName());
 			e.printStackTrace();
 		}
 	}
-	
+
 	private JsonObject createJson(WurstAnalyticsTracker tracker)
 	{
 		JsonObject json = new JsonObject();
 		json.addProperty("enabled", tracker.isEnabled());
-		
+
 		VisitorData visitorData = tracker.getConfigData().getVisitorData();
 		json.addProperty("id", visitorData.getVisitorId());
 		json.addProperty("first_launch", visitorData.getTimestampFirst());
 		json.addProperty("last_launch", visitorData.getTimestampCurrent());
 		json.addProperty("launches", visitorData.getVisits());
-		
+
 		return json;
 	}
 }

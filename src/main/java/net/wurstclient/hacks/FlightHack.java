@@ -23,7 +23,7 @@ public final class FlightHack extends Hack
 {
 	public final SliderSetting speed =
 		new SliderSetting("Speed", 1, 0.05, 5, 0.05, ValueDisplay.DECIMAL);
-	
+
 	public FlightHack()
 	{
 		super("Flight",
@@ -32,41 +32,41 @@ public final class FlightHack extends Hack
 		setCategory(Category.MOVEMENT);
 		addSetting(speed);
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
 		WURST.getHax().jetpackHack.setEnabled(false);
-		
+
 		EVENTS.add(UpdateListener.class, this);
 		EVENTS.add(IsPlayerInWaterListener.class, this);
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
 		EVENTS.remove(UpdateListener.class, this);
 		EVENTS.remove(IsPlayerInWaterListener.class, this);
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
 		ClientPlayerEntity player = MC.player;
-		
+
 		player.abilities.flying = false;
 		player.flyingSpeed = speed.getValueF();
-		
+
 		player.setVelocity(0, 0, 0);
 		Vec3d velcity = player.getVelocity();
-		
+
 		if(MC.options.keyJump.isPressed())
 			player.setVelocity(velcity.add(0, speed.getValue(), 0));
-		
+
 		if(MC.options.keySneak.isPressed())
 			player.setVelocity(velcity.subtract(0, speed.getValue(), 0));
 	}
-	
+
 	@Override
 	public void onIsPlayerInWater(IsPlayerInWaterEvent event)
 	{

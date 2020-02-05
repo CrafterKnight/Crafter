@@ -32,7 +32,7 @@ public abstract class EntityRendererMixin<T extends Entity>
 	@Shadow
 	@Final
 	protected EntityRenderDispatcher renderManager;
-	
+
 	@Inject(at = {@At("HEAD")},
 		method = {
 			"renderLabelIfPresent(Lnet/minecraft/entity/Entity;Ljava/lang/String;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V"},
@@ -44,12 +44,12 @@ public abstract class EntityRendererMixin<T extends Entity>
 		if(entity instanceof LivingEntity)
 			string = WurstClient.INSTANCE.getHax().healthTagsHack
 				.addHealth((LivingEntity)entity, string);
-		
+
 		wurstRenderLabelIfPresent(entity, string, matrixStack,
 			vertexConsumerProvider, i);
 		ci.cancel();
 	}
-	
+
 	/**
 	 * Copy of renderLabelIfPresent() since calling the original would result in
 	 * an infinite loop. Also makes it easier to modify.
@@ -59,49 +59,49 @@ public abstract class EntityRendererMixin<T extends Entity>
 		int i)
 	{
 		double d = this.renderManager.getSquaredDistanceToCamera(entity);
-		
+
 		if(d > 4096)
 			return;
-		
+
 		NameTagsHack nameTagsHack = WurstClient.INSTANCE.getHax().nameTagsHack;
-		
+
 		boolean bl = !entity.isSneaky() || nameTagsHack.isEnabled();
 		float f = entity.getHeight() + 0.5F;
 		int j = "deadmau5".equals(string) ? -10 : 0;
-		
+
 		matrixStack.push();
 		matrixStack.translate(0.0D, f, 0.0D);
 		matrixStack.multiply(this.renderManager.getRotation());
-		
+
 		float scale = 0.025F;
 		if(nameTagsHack.isEnabled())
 		{
 			double distance = WurstClient.MC.player.distanceTo(entity);
-			
+
 			if(distance > 10)
 				scale *= distance / 10;
 		}
-		
+
 		matrixStack.scale(-scale, -scale, scale);
-		
+
 		Matrix4f matrix4f = matrixStack.peek().getModel();
 		float g = MinecraftClient.getInstance().options
 			.getTextBackgroundOpacity(0.25F);
 		int k = (int)(g * 255.0F) << 24;
-		
+
 		TextRenderer textRenderer = this.getFontRenderer();
 		float h = -textRenderer.getStringWidth(string) / 2;
-		
+
 		textRenderer.draw(string, h, j, 553648127, false, matrix4f,
 			vertexConsumerProvider, bl, k, i);
-		
+
 		if(bl)
 			textRenderer.draw(string, h, j, -1, false, matrix4f,
 				vertexConsumerProvider, false, 0, i);
-		
+
 		matrixStack.pop();
 	}
-	
+
 	@Shadow
 	public TextRenderer getFontRenderer()
 	{

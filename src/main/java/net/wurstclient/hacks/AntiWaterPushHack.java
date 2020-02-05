@@ -21,19 +21,19 @@ public final class AntiWaterPushHack extends Hack
 		super("AntiWaterPush", "Prevents you from getting pushed by water.");
 		setCategory(Category.MOVEMENT);
 	}
-	
+
 	@Override
 	protected void onEnable()
 	{
 		EVENTS.add(VelocityFromFluidListener.class, this);
 	}
-	
+
 	@Override
 	protected void onDisable()
 	{
 		EVENTS.remove(VelocityFromFluidListener.class, this);
 	}
-	
+
 	@Override
 	public void onVelocityFromFluid(VelocityFromFluidEvent event)
 	{

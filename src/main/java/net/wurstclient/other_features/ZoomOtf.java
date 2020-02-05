@@ -22,15 +22,15 @@ public final class ZoomOtf extends OtherFeature implements MouseScrollListener
 {
 	private final SliderSetting level = new SliderSetting("Zoom level", 3, 1,
 		50, 0.1, v -> ValueDisplay.DECIMAL.getValueString(v) + "x");
-	
+
 	private final CheckboxSetting scroll = new CheckboxSetting(
 		"Use mouse wheel", "If enabled, you can use the mouse wheel\n"
 			+ "while zooming to zoom in even further.",
 		true);
-	
+
 	private Double currentLevel;
 	private Double defaultMouseSensitivity;
-	
+
 	public ZoomOtf()
 	{
 		super("Zoom", "Allows you to zoom in.\n"
@@ -40,62 +40,62 @@ public final class ZoomOtf extends OtherFeature implements MouseScrollListener
 		addSetting(scroll);
 		EVENTS.add(MouseScrollListener.class, this);
 	}
-	
+
 	public double changeFovBasedOnZoom(double fov)
 	{
 		GameOptions gameOptions = MinecraftClient.getInstance().options;
-		
+
 		if(currentLevel == null)
 			currentLevel = level.getValue();
-		
+
 		if(!WURST.getZoomKey().isPressed())
 		{
 			currentLevel = level.getValue();
-			
+
 			if(defaultMouseSensitivity != null)
 			{
 				gameOptions.mouseSensitivity = defaultMouseSensitivity;
 				defaultMouseSensitivity = null;
 			}
-			
+
 			return fov;
 		}
-		
+
 		if(defaultMouseSensitivity == null)
 			defaultMouseSensitivity = gameOptions.mouseSensitivity;
-			
+
 		// Adjust mouse sensitivity in relation to zoom level.
 		// (fov / currentLevel) / fov is a value between 0.02 (50x zoom)
 		// and 1 (no zoom).
 		gameOptions.mouseSensitivity =
 			defaultMouseSensitivity * (fov / currentLevel / fov);
-		
+
 		return fov / currentLevel;
 	}
-	
+
 	@Override
 	public void onMouseScroll(double amount)
 	{
 		if(!WURST.getZoomKey().isPressed() || !scroll.isChecked())
 			return;
-		
+
 		if(currentLevel == null)
 			currentLevel = level.getValue();
-		
+
 		if(amount > 0)
 			currentLevel *= 1.1;
 		else if(amount < 0)
 			currentLevel *= 0.9;
-		
+
 		currentLevel = MathUtils.clamp(currentLevel, level.getMinimum(),
 			level.getMaximum());
 	}
-	
+
 	public SliderSetting getLevelSetting()
 	{
 		return level;
 	}
-	
+
 	public CheckboxSetting getScrollSetting()
 	{
 		return scroll;

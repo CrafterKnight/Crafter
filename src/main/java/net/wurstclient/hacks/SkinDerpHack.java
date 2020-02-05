@@ -20,37 +20,37 @@ import net.wurstclient.hack.Hack;
 public final class SkinDerpHack extends Hack implements UpdateListener
 {
 	private final Random random = new Random();
-	
+
 	public SkinDerpHack()
 	{
 		super("SkinDerp", "Randomly toggles parts of your skin.");
 		setCategory(Category.FUN);
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
 		EVENTS.add(UpdateListener.class, this);
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
 		EVENTS.remove(UpdateListener.class, this);
-		
+
 		for(PlayerModelPart part : PlayerModelPart.values())
 			MC.options.setPlayerModelPart(part, true);
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
 		if(random.nextInt(4) != 0)
 			return;
-		
+
 		Set<PlayerModelPart> activeParts =
 			MC.options.getEnabledPlayerModelParts();
-		
+
 		for(PlayerModelPart part : PlayerModelPart.values())
 			MC.options.setPlayerModelPart(part, !activeParts.contains(part));
 	}

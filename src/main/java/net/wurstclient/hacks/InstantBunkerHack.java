@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.packet.HandSwingC2SPacket;
+import net.minecraft.network.packet.c2s.play.HandSwingC2SPacket;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -46,18 +46,18 @@ public final class InstantBunkerHack extends Hack
 		{1, 1, -2}, {0, 1, -2}, {-1, 1, -2}, {1, 2, 1}, {-1, 2, 1}, {1, 2, -1},
 		{-1, 2, -1}, {0, 2, 1}, {1, 2, 0}, {-1, 2, 0}, {0, 2, -1}, {0, 2, 0}};
 	private final ArrayList<BlockPos> positions = new ArrayList<>();
-	
+
 	private int blockIndex;
 	private boolean building;
 	private int startTimer;
-	
+
 	public InstantBunkerHack()
 	{
 		super("InstantBunker",
 			"Builds a small bunker around you. Needs 57 blocks.");
 		setCategory(Category.BLOCKS);
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
@@ -67,30 +67,30 @@ public final class InstantBunkerHack extends Hack
 			setEnabled(false);
 			return;
 		}
-		
+
 		ItemStack stack = MC.player.inventory.getMainHandStack();
-		
+
 		if(!(stack.getItem() instanceof BlockItem))
 		{
 			ChatUtils.error("You must have blocks in the main hand.");
 			setEnabled(false);
 			return;
 		}
-		
+
 		if(stack.getCount() < 57 && !MC.player.isCreative())
 			ChatUtils.warning("Not enough blocks. Bunker may be incomplete.");
-		
+
 		// get start pos and facings
 		BlockPos startPos = new BlockPos(MC.player);
 		Direction facing = MC.player.getHorizontalFacing();
 		Direction facing2 = facing.rotateYCounterclockwise();
-		
+
 		// set positions
 		positions.clear();
 		for(int[] pos : template)
 			positions.add(startPos.up(pos[1]).offset(facing, pos[2])
 				.offset(facing2, pos[0]));
-		
+
 		if(!"".isEmpty())// mode.getSelected() == 1)
 		{
 			// initialize building process
@@ -98,14 +98,14 @@ public final class InstantBunkerHack extends Hack
 			building = true;
 			IMC.setItemUseCooldown(4);
 		}
-		
+
 		startTimer = 2;
 		MC.player.jump();
-		
+
 		EVENTS.add(UpdateListener.class, this);
 		EVENTS.add(RenderListener.class, this);
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
@@ -113,7 +113,7 @@ public final class InstantBunkerHack extends Hack
 		EVENTS.remove(RenderListener.class, this);
 		building = false;
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
@@ -122,7 +122,7 @@ public final class InstantBunkerHack extends Hack
 			startTimer--;
 			return;
 		}
-		
+
 		// build instantly
 		if(!building && startTimer <= 0)
 		{
@@ -131,14 +131,14 @@ public final class InstantBunkerHack extends Hack
 					&& !MC.player.getBoundingBox().intersects(new Box(pos)))
 					placeBlockSimple(pos);
 			MC.player.swingHand(Hand.MAIN_HAND);
-			
+
 			if(MC.player.onGround)
 			{
 				setEnabled(false);
 				return;
 			}
 		}
-		
+
 		// place next block
 		// if(blockIndex < positions.size() && (IMC.getItemUseCooldown() == 0
 		// || WURST.getHax().fastPlaceHack.isEnabled()))
@@ -167,28 +167,28 @@ public final class InstantBunkerHack extends Hack
 		// }
 		// }
 	}
-	
+
 	private void placeBlockSimple(BlockPos pos)
 	{
 		Direction side = null;
 		Direction[] sides = Direction.values();
-		
+
 		Vec3d eyesPos = RotationUtils.getEyesPos();
 		Vec3d posVec = new Vec3d(pos).add(0.5, 0.5, 0.5);
 		double distanceSqPosVec = eyesPos.squaredDistanceTo(posVec);
-		
+
 		Vec3d[] hitVecs = new Vec3d[sides.length];
 		for(int i = 0; i < sides.length; i++)
 			hitVecs[i] =
 				posVec.add(new Vec3d(sides[i].getVector()).multiply(0.5));
-		
+
 		for(int i = 0; i < sides.length; i++)
 		{
 			// check if neighbor can be right clicked
 			BlockPos neighbor = pos.offset(sides[i]);
 			if(!BlockUtils.canBeClicked(neighbor))
 				continue;
-			
+
 			// check line of sight
 			BlockState neighborState = BlockUtils.getState(neighbor);
 			VoxelShape neighborShape =
@@ -196,62 +196,62 @@ public final class InstantBunkerHack extends Hack
 			if(MC.world.rayTraceBlock(eyesPos, hitVecs[i], neighbor,
 				neighborShape, neighborState) != null)
 				continue;
-			
+
 			side = sides[i];
 			break;
 		}
-		
+
 		if(side == null)
 			for(int i = 0; i < sides.length; i++)
 			{
 				// check if neighbor can be right clicked
 				if(!BlockUtils.canBeClicked(pos.offset(sides[i])))
 					continue;
-				
+
 				// check if side is facing away from player
 				if(distanceSqPosVec > eyesPos.squaredDistanceTo(hitVecs[i]))
 					continue;
-				
+
 				side = sides[i];
 				break;
 			}
-		
+
 		if(side == null)
 			return;
-		
+
 		Vec3d hitVec = hitVecs[side.ordinal()];
-		
+
 		// face block
 		// WURST.getRotationFaker().faceVectorPacket(hitVec);
 		// if(RotationUtils.getAngleToLastReportedLookVec(hitVec) > 1)
 		// return;
-		
+
 		// check timer
 		// if(IMC.getItemUseCooldown() > 0)
 		// return;
-		
+
 		// place block
 		IMC.getInteractionManager().rightClickBlock(pos.offset(side),
 			side.getOpposite(), hitVec);
-		
+
 		// swing arm
 		MC.player.networkHandler
 			.sendPacket(new HandSwingC2SPacket(Hand.MAIN_HAND));
-		
+
 		// reset timer
 		IMC.setItemUseCooldown(4);
 	}
-	
+
 	@Override
 	public void onRender(float partialTicks)
 	{
 		if(!building || blockIndex >= positions.size())
 			return;
-		
+
 		// scale and offset
 		double scale = 1.0 * 7.0 / 8.0;
 		double offset = (1.0 - scale) / 2.0;
-		
+
 		// GL settings
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -259,45 +259,45 @@ public final class InstantBunkerHack extends Hack
 		GL11.glLineWidth(2F);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_CULL_FACE);
-		
+
 		GL11.glPushMatrix();
 		RenderUtils.applyRenderOffset();
-		
+
 		// green box
 		{
 			GL11.glDepthMask(false);
 			GL11.glColor4f(0, 1, 0, 0.15F);
 			BlockPos pos = positions.get(blockIndex);
-			
+
 			GL11.glPushMatrix();
 			GL11.glTranslated(pos.getX(), pos.getY(), pos.getZ());
 			GL11.glTranslated(offset, offset, offset);
 			GL11.glScaled(scale, scale, scale);
-			
+
 			RenderUtils.drawSolidBox();
-			
+
 			GL11.glPopMatrix();
 			GL11.glDepthMask(true);
 		}
-		
+
 		// black outlines
 		GL11.glColor4f(0, 0, 0, 0.5F);
 		for(int i = blockIndex; i < positions.size(); i++)
 		{
 			BlockPos pos = positions.get(i);
-			
+
 			GL11.glPushMatrix();
 			GL11.glTranslated(pos.getX(), pos.getY(), pos.getZ());
 			GL11.glTranslated(offset, offset, offset);
 			GL11.glScaled(scale, scale, scale);
-			
+
 			RenderUtils.drawOutlinedBox();
-			
+
 			GL11.glPopMatrix();
 		}
-		
+
 		GL11.glPopMatrix();
-		
+
 		// GL resets
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_BLEND);

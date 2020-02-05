@@ -46,13 +46,13 @@ import net.wurstclient.update.WurstUpdater;
 public enum WurstClient
 {
 	INSTANCE;
-	
+
 	public static final MinecraftClient MC = MinecraftClient.getInstance();
 	public static final IMinecraftClient IMC = (IMinecraftClient)MC;
-	
+
 	public static final String VERSION = "7.0pre26";
-	public static final String MC_VERSION = "1.15.2";
-	
+	public static final String MC_VERSION = "20w06a";
+
 	private WurstAnalytics analytics;
 	private EventManager eventManager;
 	private AltManager altManager;
@@ -67,112 +67,112 @@ public enum WurstClient
 	private IngameHUD hud;
 	private RotationFaker rotationFaker;
 	private FriendsList friends;
-	
+
 	private boolean enabled = true;
 	private static boolean guiInitialized;
 	private WurstUpdater updater;
 	private Path wurstFolder;
-	
+
 	private FabricKeyBinding zoomKey;
-	
+
 	public void initialize()
 	{
 		System.out.println("Starting Wurst Client...");
-		
+
 		wurstFolder = createWurstFolder();
-		
+
 		String trackingID = "UA-52838431-5";
 		String hostname = "client.wurstclient.net";
 		Path analyticsFile = wurstFolder.resolve("analytics.json");
 		analytics = new WurstAnalytics(trackingID, hostname, analyticsFile);
-		
+
 		eventManager = new EventManager(this);
-		
+
 		Path enabledHacksFile = wurstFolder.resolve("enabled-hacks.json");
 		hax = new HackList(enabledHacksFile);
-		
+
 		cmds = new CmdList();
-		
+
 		otfs = new OtfList();
-		
+
 		Path settingsFile = wurstFolder.resolve("settings.json");
 		this.settingsFile = new SettingsFile(settingsFile, hax, cmds, otfs);
 		this.settingsFile.load();
-		
+
 		Path keybindsFile = wurstFolder.resolve("keybinds.json");
 		keybinds = new KeybindList(keybindsFile);
-		
+
 		Path guiFile = wurstFolder.resolve("windows.json");
 		gui = new ClickGui(guiFile);
-		
+
 		Path preferencesFile = wurstFolder.resolve("preferences.json");
 		navigator = new Navigator(preferencesFile, hax, cmds, otfs);
-		
+
 		Path friendsFile = wurstFolder.resolve("friends.json");
 		friends = new FriendsList(friendsFile);
 		friends.load();
-		
+
 		cmdProcessor = new CmdProcessor(cmds);
 		eventManager.add(ChatOutputListener.class, cmdProcessor);
-		
+
 		KeybindProcessor keybindProcessor =
 			new KeybindProcessor(hax, keybinds, cmdProcessor);
 		eventManager.add(KeyPressListener.class, keybindProcessor);
-		
+
 		hud = new IngameHUD();
 		eventManager.add(GUIRenderListener.class, hud);
-		
+
 		rotationFaker = new RotationFaker();
 		eventManager.add(PreMotionListener.class, rotationFaker);
 		eventManager.add(PostMotionListener.class, rotationFaker);
-		
+
 		updater = new WurstUpdater();
 		eventManager.add(UpdateListener.class, updater);
-		
+
 		Path altsFile = wurstFolder.resolve("alts.encrypted_json");
 		Path encFolder = createEncryptionFolder();
 		altManager = new AltManager(altsFile, encFolder);
-		
+
 		zoomKey =
 			FabricKeyBinding.Builder.create(new Identifier("wurst", "zoom"),
 				InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_V, "Zoom").build();
 		KeyBindingRegistry.INSTANCE.addCategory("Zoom");
 		KeyBindingRegistry.INSTANCE.register(zoomKey);
-		
+
 		analytics.trackPageView("/mc" + MC_VERSION + "/v" + VERSION,
 			"Wurst " + VERSION + " MC" + MC_VERSION);
 	}
-	
+
 	private Path createWurstFolder()
 	{
 		Path dotMinecraftFolder = MC.runDirectory.toPath().normalize();
 		Path wurstFolder = dotMinecraftFolder.resolve("wurst");
-		
+
 		try
 		{
 			Files.createDirectories(wurstFolder);
-			
+
 		}catch(IOException e)
 		{
 			throw new RuntimeException(
 				"Couldn't create .minecraft/wurst folder.", e);
 		}
-		
+
 		return wurstFolder;
 	}
-	
+
 	private Path createEncryptionFolder()
 	{
 		Path encFolder =
 			Paths.get(System.getProperty("user.home"), ".Wurst encryption")
 				.normalize();
-		
+
 		try
 		{
 			Files.createDirectories(encFolder);
 			if(Util.getOperatingSystem() == Util.OperatingSystem.WINDOWS)
 				Files.setAttribute(encFolder, "dos:hidden", true);
-			
+
 			Path readme = encFolder.resolve("READ ME I AM VERY IMPORTANT.txt");
 			String readmeText = "DO NOT SHARE THESE FILES WITH ANYONE!\r\n"
 				+ "They are encryption keys that protect your alt list file from being read by someone else.\r\n"
@@ -183,51 +183,51 @@ public enum WurstClient
 				+ "In other words, YOUR ALT LIST WILL BE DELETED.";
 			Files.write(readme, readmeText.getBytes("UTF-8"),
 				StandardOpenOption.CREATE);
-			
+
 		}catch(IOException e)
 		{
 			throw new RuntimeException(
 				"Couldn't create '.Wurst encryption' folder.", e);
 		}
-		
+
 		return encFolder;
 	}
-	
+
 	public WurstAnalytics getAnalytics()
 	{
 		return analytics;
 	}
-	
+
 	public EventManager getEventManager()
 	{
 		return eventManager;
 	}
-	
+
 	public void saveSettings()
 	{
 		settingsFile.save();
 	}
-	
+
 	public HackList getHax()
 	{
 		return hax;
 	}
-	
+
 	public CmdList getCmds()
 	{
 		return cmds;
 	}
-	
+
 	public OtfList getOtfs()
 	{
 		return otfs;
 	}
-	
+
 	public KeybindList getKeybinds()
 	{
 		return keybinds;
 	}
-	
+
 	public ClickGui getGui()
 	{
 		if(!guiInitialized)
@@ -235,60 +235,60 @@ public enum WurstClient
 			guiInitialized = true;
 			gui.init();
 		}
-		
+
 		return gui;
 	}
-	
+
 	public Navigator getNavigator()
 	{
 		return navigator;
 	}
-	
+
 	public CmdProcessor getCmdProcessor()
 	{
 		return cmdProcessor;
 	}
-	
+
 	public IngameHUD getHud()
 	{
 		return hud;
 	}
-	
+
 	public RotationFaker getRotationFaker()
 	{
 		return rotationFaker;
 	}
-	
+
 	public FriendsList getFriends()
 	{
 		return friends;
 	}
-	
+
 	public boolean isEnabled()
 	{
 		return enabled;
 	}
-	
+
 	public void setEnabled(boolean enabled)
 	{
 		this.enabled = enabled;
 	}
-	
+
 	public WurstUpdater getUpdater()
 	{
 		return updater;
 	}
-	
+
 	public Path getWurstFolder()
 	{
 		return wurstFolder;
 	}
-	
+
 	public FabricKeyBinding getZoomKey()
 	{
 		return zoomKey;
 	}
-	
+
 	public AltManager getAltManager()
 	{
 		return altManager;

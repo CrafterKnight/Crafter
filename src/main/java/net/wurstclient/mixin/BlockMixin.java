@@ -33,7 +33,7 @@ public abstract class BlockMixin implements ItemConvertible
 	{
 		ShouldDrawSideEvent event = new ShouldDrawSideEvent(state);
 		WurstClient.INSTANCE.getEventManager().fire(event);
-		
+
 		if(event.isRendered() != null)
 			cir.setReturnValue(event.isRendered());
 	}

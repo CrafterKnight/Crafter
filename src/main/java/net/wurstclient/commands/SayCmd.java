@@ -7,7 +7,7 @@
  */
 package net.wurstclient.commands;
 
-import net.minecraft.server.network.packet.ChatMessageC2SPacket;
+import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 import net.wurstclient.SearchTags;
 import net.wurstclient.command.CmdException;
 import net.wurstclient.command.CmdSyntaxError;
@@ -22,13 +22,13 @@ public final class SayCmd extends Command
 			"Sends the given chat message, even if it starts with a\n" + "dot.",
 			".say <message>");
 	}
-	
+
 	@Override
 	public void call(String[] args) throws CmdException
 	{
 		if(args.length < 1)
 			throw new CmdSyntaxError();
-		
+
 		String message = String.join(" ", args);
 		ChatMessageC2SPacket packet = new ChatMessageC2SPacket(message);
 		MC.getNetworkHandler().sendPacket(packet);

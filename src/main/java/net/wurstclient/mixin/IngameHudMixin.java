@@ -27,7 +27,7 @@ public class IngameHudMixin extends DrawableHelper
 	{
 		if(WurstClient.MC.options.debugEnabled)
 			return;
-		
+
 		GUIRenderEvent event = new GUIRenderEvent(partialTicks);
 		WurstClient.INSTANCE.getEventManager().fire(event);
 	}

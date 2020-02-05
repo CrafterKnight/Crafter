@@ -60,15 +60,15 @@ public final class BaseFinderHack extends Hack
 		"minecraft:spruce_log", "minecraft:stone", "minecraft:sunflower",
 		"minecraft:tall_grass", "minecraft:tall_seagrass", "minecraft:vine",
 		"minecraft:water", "minecraft:white_tulip");
-	
+
 	private ArrayList<String> blockNames;
-	
+
 	private final HashSet<BlockPos> matchingBlocks = new HashSet<>();
 	private final ArrayList<int[]> vertices = new ArrayList<>();
-	
+
 	private int messageTimer = 0;
 	private int counter;
-	
+
 	public BaseFinderHack()
 	{
 		super("BaseFinder",
@@ -78,12 +78,12 @@ public final class BaseFinderHack extends Hack
 		setCategory(Category.RENDER);
 		addSetting(naturalBlocks);
 	}
-	
+
 	@Override
 	public String getRenderName()
 	{
 		String name = getName() + " [";
-		
+
 		// counter
 		if(counter >= 10000)
 			name += "10000+ blocks";
@@ -93,22 +93,22 @@ public final class BaseFinderHack extends Hack
 			name += "nothing";
 		else
 			name += counter + " blocks";
-		
+
 		name += " found]";
 		return name;
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
 		// reset timer
 		messageTimer = 0;
 		blockNames = new ArrayList<>(naturalBlocks.getBlockNames());
-		
+
 		EVENTS.add(UpdateListener.class, this);
 		EVENTS.add(RenderListener.class, this);
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
@@ -117,7 +117,7 @@ public final class BaseFinderHack extends Hack
 		matchingBlocks.clear();
 		vertices.clear();
 	}
-	
+
 	@Override
 	public void onRender(float partialTicks)
 	{
@@ -128,10 +128,10 @@ public final class BaseFinderHack extends Hack
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glColor4f(1F, 0F, 0F, 0.15F);
-		
+
 		GL11.glPushMatrix();
 		RenderUtils.applyRenderOffset();
-		
+
 		// vertices
 		GL11.glBegin(GL11.GL_QUADS);
 		{
@@ -139,31 +139,31 @@ public final class BaseFinderHack extends Hack
 				GL11.glVertex3d(vertex[0], vertex[1], vertex[2]);
 		}
 		GL11.glEnd();
-		
+
 		GL11.glPopMatrix();
-		
+
 		// GL resets
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glColor4f(1, 1, 1, 1);
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
 		int modulo = MC.player.age % 64;
-		
+
 		// reset matching blocks
 		if(modulo == 0)
 			matchingBlocks.clear();
-		
+
 		int startY = 255 - modulo * 4;
 		int endY = startY - 4;
-		
+
 		BlockPos playerPos =
 			new BlockPos(MC.player.getX(), 0, MC.player.getZ());
-		
+
 		// search matching blocks
 		loop: for(int y = startY; y > endY; y--)
 			for(int x = 64; x > -64; x--)
@@ -171,19 +171,19 @@ public final class BaseFinderHack extends Hack
 				{
 					if(matchingBlocks.size() >= 10000)
 						break loop;
-					
+
 					BlockPos pos = playerPos.add(x, y, z);
-					
+
 					if(Collections.binarySearch(blockNames,
 						BlockUtils.getName(pos)) >= 0)
 						continue;
-					
+
 					matchingBlocks.add(pos);
 				}
-			
+
 		if(modulo != 63)
 			return;
-		
+
 		// update timer
 		if(matchingBlocks.size() < 10000)
 			messageTimer--;
@@ -197,14 +197,14 @@ public final class BaseFinderHack extends Hack
 				ChatUtils.message(
 					"To prevent lag, it will only show the first 10000 blocks.");
 			}
-			
+
 			// reset timer
 			messageTimer = 3;
 		}
-		
+
 		// update counter
 		counter = matchingBlocks.size();
-		
+
 		// calculate vertices
 		vertices.clear();
 		for(BlockPos pos : matchingBlocks)
@@ -216,7 +216,7 @@ public final class BaseFinderHack extends Hack
 				addVertex(pos, 1, 0, 1);
 				addVertex(pos, 0, 0, 1);
 			}
-			
+
 			if(!matchingBlocks.contains(pos.up()))
 			{
 				addVertex(pos, 0, 1, 0);
@@ -224,7 +224,7 @@ public final class BaseFinderHack extends Hack
 				addVertex(pos, 1, 1, 1);
 				addVertex(pos, 1, 1, 0);
 			}
-			
+
 			if(!matchingBlocks.contains(pos.north()))
 			{
 				addVertex(pos, 0, 0, 0);
@@ -232,7 +232,7 @@ public final class BaseFinderHack extends Hack
 				addVertex(pos, 1, 1, 0);
 				addVertex(pos, 1, 0, 0);
 			}
-			
+
 			if(!matchingBlocks.contains(pos.east()))
 			{
 				addVertex(pos, 1, 0, 0);
@@ -240,7 +240,7 @@ public final class BaseFinderHack extends Hack
 				addVertex(pos, 1, 1, 1);
 				addVertex(pos, 1, 0, 1);
 			}
-			
+
 			if(!matchingBlocks.contains(pos.south()))
 			{
 				addVertex(pos, 0, 0, 1);
@@ -248,7 +248,7 @@ public final class BaseFinderHack extends Hack
 				addVertex(pos, 1, 1, 1);
 				addVertex(pos, 0, 1, 1);
 			}
-			
+
 			if(!matchingBlocks.contains(pos.west()))
 			{
 				addVertex(pos, 0, 0, 0);
@@ -258,7 +258,7 @@ public final class BaseFinderHack extends Hack
 			}
 		}
 	}
-	
+
 	private void addVertex(BlockPos pos, int x, int y, int z)
 	{
 		vertices.add(new int[]{pos.getX() + x, pos.getY() + y, pos.getZ() + z});

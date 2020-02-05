@@ -42,25 +42,25 @@ public abstract class BlockModelRendererMixin
 	{
 		TesselateBlockEvent event = new TesselateBlockEvent(blockState_1);
 		WurstClient.INSTANCE.getEventManager().fire(event);
-		
+
 		if(event.isCancelled())
 		{
 			cir.cancel();
 			return;
 		}
-		
+
 		if(!depthTest)
 			return;
-		
+
 		ShouldDrawSideEvent event2 = new ShouldDrawSideEvent(blockState_1);
 		WurstClient.INSTANCE.getEventManager().fire(event2);
 		if(!Boolean.TRUE.equals(event2.isRendered()))
 			return;
-		
+
 		renderSmooth(blockRenderView_1, bakedModel_1, blockState_1, blockPos_1,
 			matrixStack_1, vertexConsumer_1, false, random_1, long_1, int_1);
 	}
-	
+
 	@Shadow
 	public boolean renderSmooth(BlockRenderView blockRenderView_1,
 		BakedModel bakedModel_1, BlockState blockState_1, BlockPos blockPos_1,

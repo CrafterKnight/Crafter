@@ -29,28 +29,28 @@ public final class ImportAltsFileChooser extends JFileChooser
 		try
 		{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			
+
 		}catch(ReflectiveOperationException | UnsupportedLookAndFeelException e)
 		{
 			throw new RuntimeException(e);
 		}
-		
+
 		JFileChooser fileChooser = new ImportAltsFileChooser(new File(args[0]));
-		
+
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fileChooser.setAcceptAllFileFilterUsed(false);
 		fileChooser.addChoosableFileFilter(
 			new FileNameExtensionFilter("TXT file (username:password)", "txt"));
-		
+
 		if(fileChooser.showOpenDialog(null) != JFileChooser.APPROVE_OPTION)
 			return;
-		
+
 		File file = fileChooser.getSelectedFile();
 		try
 		{
 			for(String line : Files.readAllLines(file.toPath()))
 				System.out.println(line);
-			
+
 		}catch(IOException e)
 		{
 			e.printStackTrace();
@@ -61,12 +61,12 @@ public final class ImportAltsFileChooser extends JFileChooser
 				JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
+
 	public ImportAltsFileChooser(File currentDirectory)
 	{
 		super(currentDirectory);
 	}
-	
+
 	@Override
 	protected JDialog createDialog(Component parent) throws HeadlessException
 	{
@@ -74,5 +74,5 @@ public final class ImportAltsFileChooser extends JFileChooser
 		dialog.setAlwaysOnTop(true);
 		return dialog;
 	}
-	
+
 }

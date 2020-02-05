@@ -21,7 +21,7 @@ public final class AntiKnockbackHack extends Hack implements KnockbackListener
 	private final SliderSetting strength = new SliderSetting("Strength",
 		"How far to reduce knockback.\n" + "100% = no knockback", 1, 0.01, 1,
 		0.01, ValueDisplay.PERCENTAGE);
-	
+
 	public AntiKnockbackHack()
 	{
 		super("AntiKnockback",
@@ -29,19 +29,19 @@ public final class AntiKnockbackHack extends Hack implements KnockbackListener
 		setCategory(Category.COMBAT);
 		addSetting(strength);
 	}
-	
+
 	@Override
 	protected void onEnable()
 	{
 		EVENTS.add(KnockbackListener.class, this);
 	}
-	
+
 	@Override
 	protected void onDisable()
 	{
 		EVENTS.remove(KnockbackListener.class, this);
 	}
-	
+
 	@Override
 	public void onKnockback(KnockbackEvent event)
 	{

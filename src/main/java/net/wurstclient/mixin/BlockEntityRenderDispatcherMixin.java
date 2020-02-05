@@ -33,7 +33,7 @@ public class BlockEntityRenderDispatcherMixin
 		RenderBlockEntityEvent event =
 			new RenderBlockEntityEvent(blockEntity_1);
 		WurstClient.INSTANCE.getEventManager().fire(event);
-		
+
 		if(event.isCancelled())
 			ci.cancel();
 	}

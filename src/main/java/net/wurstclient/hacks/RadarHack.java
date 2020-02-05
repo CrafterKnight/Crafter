@@ -38,12 +38,12 @@ public final class RadarHack extends Hack implements UpdateListener
 {
 	private final Window window;
 	private final ArrayList<Entity> entities = new ArrayList<>();
-	
+
 	private final SliderSetting radius = new SliderSetting("Radius",
 		"Radius in blocks.", 100, 1, 100, 1, ValueDisplay.INTEGER);
 	private final CheckboxSetting rotate =
 		new CheckboxSetting("Rotate with player", true);
-	
+
 	private final CheckboxSetting filterPlayers = new CheckboxSetting(
 		"Filter players", "Won't show other players.", false);
 	private final CheckboxSetting filterSleeping = new CheckboxSetting(
@@ -54,7 +54,7 @@ public final class RadarHack extends Hack implements UpdateListener
 		"Filter animals", "Won't show pigs, cows, etc.", false);
 	private final CheckboxSetting filterInvisible = new CheckboxSetting(
 		"Filter invisible", "Won't show invisible entities.", false);
-	
+
 	public RadarHack()
 	{
 		super("Radar",
@@ -63,7 +63,7 @@ public final class RadarHack extends Hack implements UpdateListener
 				+ "\u00a76orange\u00a7r - monsters\n"
 				+ "\u00a7agreen\u00a7r - animals\n"
 				+ "\u00a77gray\u00a7r - others\n");
-		
+
 		setCategory(Category.RENDER);
 		addSetting(radius);
 		addSetting(rotate);
@@ -72,33 +72,33 @@ public final class RadarHack extends Hack implements UpdateListener
 		addSetting(filterMonsters);
 		addSetting(filterAnimals);
 		addSetting(filterInvisible);
-		
+
 		window = new Window("Radar");
 		window.setPinned(true);
 		window.setInvisible(true);
 		window.add(new RadarComponent(this));
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
 		EVENTS.add(UpdateListener.class, this);
 		window.setInvisible(false);
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
 		EVENTS.remove(UpdateListener.class, this);
 		window.setInvisible(true);
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
 		ClientPlayerEntity player = MC.player;
 		ClientWorld world = MC.world;
-		
+
 		entities.clear();
 		Stream<Entity> stream =
 			StreamSupport.stream(world.getEntities().spliterator(), true)
@@ -106,43 +106,43 @@ public final class RadarHack extends Hack implements UpdateListener
 				.filter(e -> !(e instanceof FakePlayerEntity))
 				.filter(e -> e instanceof LivingEntity)
 				.filter(e -> ((LivingEntity)e).getHealth() > 0);
-		
+
 		if(filterPlayers.isChecked())
 			stream = stream.filter(e -> !(e instanceof PlayerEntity));
-		
+
 		if(filterSleeping.isChecked())
 			stream = stream.filter(e -> !(e instanceof PlayerEntity
 				&& ((PlayerEntity)e).isSleeping()));
-		
+
 		if(filterMonsters.isChecked())
 			stream = stream.filter(e -> !(e instanceof Monster));
-		
+
 		if(filterAnimals.isChecked())
 			stream = stream.filter(
 				e -> !(e instanceof AnimalEntity || e instanceof AmbientEntity
 					|| e instanceof WaterCreatureEntity));
-		
+
 		if(filterInvisible.isChecked())
 			stream = stream.filter(e -> !e.isInvisible());
-		
+
 		entities.addAll(stream.collect(Collectors.toList()));
 	}
-	
+
 	public Window getWindow()
 	{
 		return window;
 	}
-	
+
 	public Iterable<Entity> getEntities()
 	{
 		return Collections.unmodifiableList(entities);
 	}
-	
+
 	public double getRadius()
 	{
 		return radius.getValue();
 	}
-	
+
 	public boolean isRotateEnabled()
 	{
 		return rotate.isChecked();

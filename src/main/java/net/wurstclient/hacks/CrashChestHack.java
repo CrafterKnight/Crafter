@@ -29,10 +29,10 @@ public final class CrashChestHack extends Hack
 			+ "If copies are instead placed in a chest, anyone\n"
 			+ "who opens the chest will be kicked from the\n"
 			+ "server (just once).");
-		
+
 		setCategory(Category.ITEMS);
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
@@ -42,14 +42,14 @@ public final class CrashChestHack extends Hack
 			setEnabled(false);
 			return;
 		}
-		
+
 		if(!MC.player.inventory.getArmorStack(0).isEmpty())
 		{
 			ChatUtils.error("Please clear your shoes slot.");
 			setEnabled(false);
 			return;
 		}
-		
+
 		// generate item
 		ItemStack stack = new ItemStack(Blocks.CHEST);
 		CompoundTag nbtCompound = new CompoundTag();
@@ -59,7 +59,7 @@ public final class CrashChestHack extends Hack
 		nbtCompound.put("www.wurstclient.net", nbtList);
 		stack.setTag(nbtCompound);
 		stack.setCustomName(new LiteralText("Copy Me"));
-		
+
 		// give item
 		MC.player.inventory.armor.set(0, stack);
 		ChatUtils.message("Item has been placed in your shoes slot.");

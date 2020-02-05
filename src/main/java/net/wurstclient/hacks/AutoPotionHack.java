@@ -12,8 +12,8 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.potion.PotionUtil;
-import net.minecraft.server.network.packet.PlayerMoveC2SPacket;
 import net.wurstclient.Category;
 import net.wurstclient.SearchTags;
 import net.wurstclient.events.UpdateListener;
@@ -30,37 +30,37 @@ public final class AutoPotionHack extends Hack implements UpdateListener
 			+ "reaches this value or falls below it.",
 		6, 0.5, 9.5, 0.5,
 		v -> ValueDisplay.DECIMAL.getValueString(v) + " hearts");
-	
+
 	private int timer;
-	
+
 	public AutoPotionHack()
 	{
 		super("AutoPotion", "Automatically throws splash potions of\n"
 			+ "instant health when your health is low.");
-		
+
 		setCategory(Category.COMBAT);
 		addSetting(health);
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
 		EVENTS.add(UpdateListener.class, this);
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
 		EVENTS.remove(UpdateListener.class, this);
 		timer = 0;
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
 		// search potion in hotbar
 		int potionInHotbar = findPotion(0, 9);
-		
+
 		// check if any potion was found
 		if(potionInHotbar != -1)
 		{
@@ -70,60 +70,60 @@ public final class AutoPotionHack extends Hack implements UpdateListener
 				timer--;
 				return;
 			}
-			
+
 			// check health
 			if(MC.player.getHealth() > health.getValueF() * 2F)
 				return;
-			
+
 			// save old slot
 			int oldSlot = MC.player.inventory.selectedSlot;
-			
+
 			// throw potion in hotbar
 			MC.player.inventory.selectedSlot = potionInHotbar;
 			MC.player.networkHandler
 				.sendPacket(new PlayerMoveC2SPacket.LookOnly(MC.player.yaw, 90,
 					MC.player.onGround));
 			IMC.getInteractionManager().rightClickItem();
-			
+
 			// reset slot and rotation
 			MC.player.inventory.selectedSlot = oldSlot;
 			MC.player.networkHandler
 				.sendPacket(new PlayerMoveC2SPacket.LookOnly(MC.player.yaw,
 					MC.player.pitch, MC.player.onGround));
-			
+
 			// reset timer
 			timer = 10;
-			
+
 			return;
 		}
-		
+
 		// search potion in inventory
 		int potionInInventory = findPotion(9, 36);
-		
+
 		// move potion in inventory to hotbar
 		if(potionInInventory != -1)
 			IMC.getInteractionManager()
 				.windowClick_QUICK_MOVE(potionInInventory);
 	}
-	
+
 	private int findPotion(int startSlot, int endSlot)
 	{
 		for(int i = startSlot; i < endSlot; i++)
 		{
 			ItemStack stack = MC.player.inventory.getInvStack(i);
-			
+
 			// filter out non-splash potion items
 			if(stack.getItem() != Items.SPLASH_POTION)
 				continue;
-			
+
 			// search for instant health effects
 			if(hasEffect(stack, StatusEffects.INSTANT_HEALTH))
 				return i;
 		}
-		
+
 		return -1;
 	}
-	
+
 	private boolean hasEffect(ItemStack stack, StatusEffect effect)
 	{
 		for(StatusEffectInstance effectInstance : PotionUtil
@@ -131,10 +131,10 @@ public final class AutoPotionHack extends Hack implements UpdateListener
 		{
 			if(effectInstance.getEffectType() != effect)
 				continue;
-			
+
 			return true;
 		}
-		
+
 		return false;
 	}
 }

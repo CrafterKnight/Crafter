@@ -18,46 +18,46 @@ import net.wurstclient.event.Listener;
 public interface ChatInputListener extends Listener
 {
 	public void onReceivedMessage(ChatInputEvent event);
-	
+
 	public static class ChatInputEvent
 		extends CancellableEvent<ChatInputListener>
 	{
 		private Text component;
 		private List<ChatHudLine> chatLines;
-		
+
 		public ChatInputEvent(Text component, List<ChatHudLine> chatLines)
 		{
 			this.component = component;
 			this.chatLines = chatLines;
 		}
-		
+
 		public Text getComponent()
 		{
 			return component;
 		}
-		
+
 		public void setComponent(Text component)
 		{
 			this.component = component;
 		}
-		
+
 		public List<ChatHudLine> getChatLines()
 		{
 			return chatLines;
 		}
-		
+
 		@Override
 		public void fire(ArrayList<ChatInputListener> listeners)
 		{
 			for(ChatInputListener listener : listeners)
 			{
 				listener.onReceivedMessage(this);
-				
+
 				if(isCancelled())
 					break;
 			}
 		}
-		
+
 		@Override
 		public Class<ChatInputListener> getListenerType()
 		{

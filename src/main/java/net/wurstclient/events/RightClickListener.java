@@ -15,7 +15,7 @@ import net.wurstclient.event.Listener;
 public interface RightClickListener extends Listener
 {
 	public void onRightClick(RightClickEvent event);
-	
+
 	public static class RightClickEvent
 		extends CancellableEvent<RightClickListener>
 	{
@@ -25,12 +25,12 @@ public interface RightClickListener extends Listener
 			for(RightClickListener listener : listeners)
 			{
 				listener.onRightClick(this);
-				
+
 				if(isCancelled())
 					break;
 			}
 		}
-		
+
 		@Override
 		public Class<RightClickListener> getListenerType()
 		{

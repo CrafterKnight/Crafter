@@ -25,7 +25,7 @@ public class KeyboardMixin
 	{
 		KeyPressEvent event =
 			new KeyPressEvent(keyCode, scanCode, action, modifiers);
-		
+
 		WurstClient.INSTANCE.getEventManager().fire(event);
 	}
 }

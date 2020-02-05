@@ -33,34 +33,34 @@ public class ChatHudMixin extends DrawableHelper
 	private static Logger LOGGER;
 	@Shadow
 	private MinecraftClient client;
-	
+
 	@Inject(at = @At("HEAD"),
 		method = "addMessage(Lnet/minecraft/text/Text;I)V",
 		cancellable = true)
 	private void onAddMessage(Text chatText, int chatLineId, CallbackInfo ci)
 	{
 		ChatInputEvent event = new ChatInputEvent(chatText, visibleMessages);
-		
+
 		WurstClient.INSTANCE.getEventManager().fire(event);
 		if(event.isCancelled())
 		{
 			ci.cancel();
 			return;
 		}
-		
+
 		chatText = event.getComponent();
 		shadow$addMessage(chatText, chatLineId, client.inGameHud.getTicks(),
 			false);
-		
+
 		LOGGER.info("[CHAT] {}", chatText.getString().replaceAll("\r", "\\\\r")
 			.replaceAll("\n", "\\\\n"));
 		ci.cancel();
 	}
-	
+
 	@Shadow
 	private void shadow$addMessage(Text text_1, int int_1, int int_2,
 		boolean boolean_1)
 	{
-		
+
 	}
 }

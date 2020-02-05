@@ -33,7 +33,7 @@ public class TerrainRenderContextMixin
 	{
 		TesselateBlockEvent event = new TesselateBlockEvent(blockState);
 		WurstClient.INSTANCE.getEventManager().fire(event);
-		
+
 		if(event.isCancelled())
 			cir.cancel();
 	}

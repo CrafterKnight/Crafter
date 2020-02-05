@@ -30,10 +30,10 @@ public final class OtfList
 	// public final TabGuiOtf tabGuiOtf = new TabGuiOtf();
 	public final WurstLogoOtf wurstLogoOtf = new WurstLogoOtf();
 	public final ZoomOtf zoomOtf = new ZoomOtf();
-	
+
 	private final TreeMap<String, OtherFeature> otfs =
 		new TreeMap<>((o1, o2) -> o1.compareToIgnoreCase(o2));
-	
+
 	public OtfList()
 	{
 		try
@@ -42,11 +42,11 @@ public final class OtfList
 			{
 				if(!field.getName().endsWith("Otf"))
 					continue;
-				
+
 				OtherFeature otf = (OtherFeature)field.get(this);
 				otfs.put(otf.getName(), otf);
 			}
-			
+
 		}catch(Exception e)
 		{
 			String message = "Initializing other Wurst features";
@@ -54,17 +54,17 @@ public final class OtfList
 			throw new CrashException(report);
 		}
 	}
-	
+
 	public OtherFeature getOtfByName(String name)
 	{
 		return otfs.get(name);
 	}
-	
+
 	public Collection<OtherFeature> getAllOtfs()
 	{
 		return otfs.values();
 	}
-	
+
 	public int countOtfs()
 	{
 		return otfs.size();

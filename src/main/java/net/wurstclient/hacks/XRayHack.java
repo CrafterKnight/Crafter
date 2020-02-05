@@ -49,27 +49,27 @@ public final class XRayHack extends Hack implements UpdateListener,
 		"minecraft:repeating_command_block", "minecraft:spawner",
 		"minecraft:tnt", "minecraft:torch", "minecraft:trapped_chest",
 		"minecraft:water");
-	
+
 	private ArrayList<String> oreNames;
-	
+
 	public XRayHack()
 	{
 		super("X-Ray", "Allows you to see ores through walls.");
 		setCategory(Category.RENDER);
 		addSetting(ores);
 	}
-	
+
 	@Override
 	public String getRenderName()
 	{
 		return "X-Wurst";
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
 		oreNames = new ArrayList<>(ores.getBlockNames());
-		
+
 		EVENTS.add(UpdateListener.class, this);
 		EVENTS.add(SetOpaqueCubeListener.class, this);
 		EVENTS.add(GetAmbientOcclusionLightLevelListener.class, this);
@@ -78,7 +78,7 @@ public final class XRayHack extends Hack implements UpdateListener,
 		EVENTS.add(RenderBlockEntityListener.class, this);
 		MC.worldRenderer.reload();
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
@@ -89,55 +89,55 @@ public final class XRayHack extends Hack implements UpdateListener,
 		EVENTS.remove(TesselateBlockListener.class, this);
 		EVENTS.remove(RenderBlockEntityListener.class, this);
 		MC.worldRenderer.reload();
-		
+
 		if(!WURST.getHax().fullbrightHack.isEnabled())
 			MC.options.gamma = 0.5F;
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
 		MC.options.gamma = 16;
 	}
-	
+
 	@Override
 	public void onSetOpaqueCube(SetOpaqueCubeEvent event)
 	{
 		event.cancel();
 	}
-	
+
 	@Override
 	public void onGetAmbientOcclusionLightLevel(
 		GetAmbientOcclusionLightLevelEvent event)
 	{
 		event.setLightLevel(1);
 	}
-	
+
 	@Override
 	public void onShouldDrawSide(ShouldDrawSideEvent event)
 	{
 		event.setRendered(isVisible(event.getState().getBlock()));
 	}
-	
+
 	@Override
 	public void onTesselateBlock(TesselateBlockEvent event)
 	{
 		if(!isVisible(event.getState().getBlock()))
 			event.cancel();
 	}
-	
+
 	@Override
 	public void onRenderBlockEntity(RenderBlockEntityEvent event)
 	{
 		if(!isVisible(BlockUtils.getBlock(event.getBlockEntity().getPos())))
 			event.cancel();
 	}
-	
+
 	public void openBlockListEditor(Screen prevScreen)
 	{
 		MC.openScreen(new EditBlockListScreen(prevScreen, ores));
 	}
-	
+
 	private boolean isVisible(Block block)
 	{
 		String name = BlockUtils.getName(block);

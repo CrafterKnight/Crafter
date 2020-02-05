@@ -46,14 +46,14 @@ public abstract class MinecraftClientMixin
 	private ClientPlayerEntity player;
 	@Shadow
 	private Session session;
-	
+
 	private Session wurstSession;
-	
+
 	private MinecraftClientMixin(WurstClient wurst, String string_1)
 	{
 		super(string_1);
 	}
-	
+
 	@Inject(at = {@At(value = "FIELD",
 		target = "Lnet/minecraft/client/MinecraftClient;crosshairTarget:Lnet/minecraft/util/hit/HitResult;",
 		ordinal = 0)}, method = {"doAttack()V"}, cancellable = true)
@@ -61,11 +61,11 @@ public abstract class MinecraftClientMixin
 	{
 		LeftClickEvent event = new LeftClickEvent();
 		WurstClient.INSTANCE.getEventManager().fire(event);
-		
+
 		if(event.isCancelled())
 			ci.cancel();
 	}
-	
+
 	@Inject(at = {@At(value = "FIELD",
 		target = "Lnet/minecraft/client/MinecraftClient;itemUseCooldown:I",
 		ordinal = 0)}, method = {"doItemUse()V"}, cancellable = true)
@@ -73,25 +73,25 @@ public abstract class MinecraftClientMixin
 	{
 		RightClickEvent event = new RightClickEvent();
 		WurstClient.INSTANCE.getEventManager().fire(event);
-		
+
 		if(event.isCancelled())
 			ci.cancel();
 	}
-	
+
 	@Inject(at = {@At("HEAD")}, method = {"doItemPick()V"})
 	private void onDoItemPick(CallbackInfo ci)
 	{
 		if(!WurstClient.INSTANCE.isEnabled())
 			return;
-		
+
 		HitResult hitResult = WurstClient.MC.crosshairTarget;
 		if(hitResult == null || hitResult.getType() != HitResult.Type.ENTITY)
 			return;
-		
+
 		Entity entity = ((EntityHitResult)hitResult).getEntity();
 		WurstClient.INSTANCE.getFriends().middleClick(entity);
 	}
-	
+
 	@Inject(at = {@At("HEAD")},
 		method = {"getSession()Lnet/minecraft/client/util/Session;"},
 		cancellable = true)
@@ -99,10 +99,10 @@ public abstract class MinecraftClientMixin
 	{
 		if(wurstSession == null)
 			return;
-		
+
 		cir.setReturnValue(wurstSession);
 	}
-	
+
 	@Redirect(at = @At(value = "FIELD",
 		target = "Lnet/minecraft/client/MinecraftClient;session:Lnet/minecraft/client/util/Session;",
 		opcode = Opcodes.GETFIELD,
@@ -116,46 +116,46 @@ public abstract class MinecraftClientMixin
 		else
 			return session;
 	}
-	
+
 	@Override
 	public void rightClick()
 	{
 		doItemUse();
 	}
-	
+
 	@Override
 	public int getItemUseCooldown()
 	{
 		return itemUseCooldown;
 	}
-	
+
 	@Override
 	public void setItemUseCooldown(int itemUseCooldown)
 	{
 		this.itemUseCooldown = itemUseCooldown;
 	}
-	
+
 	@Override
 	public IClientPlayerEntity getPlayer()
 	{
 		return (IClientPlayerEntity)player;
 	}
-	
+
 	@Override
 	public IClientPlayerInteractionManager getInteractionManager()
 	{
 		return (IClientPlayerInteractionManager)interactionManager;
 	}
-	
+
 	@Override
 	public void setSession(Session session)
 	{
 		wurstSession = session;
 	}
-	
+
 	@Shadow
 	private void doItemUse()
 	{
-		
+
 	}
 }

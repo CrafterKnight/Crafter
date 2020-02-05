@@ -31,26 +31,26 @@ public final class AntiAfkHack extends Hack
 	implements UpdateListener, RenderListener
 {
 	private final CheckboxSetting useAi = new CheckboxSetting("Use AI", true);
-	
+
 	private int timer;
 	private Random random = new Random();
 	private BlockPos start;
 	private BlockPos nextBlock;
-	
+
 	private RandomPathFinder pathFinder;
 	private PathProcessor processor;
 	private boolean creativeFlying;
-	
+
 	public AntiAfkHack()
 	{
 		super("AntiAFK",
 			"Walks around randomly to hide you from AFK detectors.\n"
 				+ "Needs at least 3x3 blocks of free space.");
-		
+
 		setCategory(Category.OTHER);
 		addSetting(useAi);
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
@@ -58,27 +58,27 @@ public final class AntiAfkHack extends Hack
 		nextBlock = null;
 		pathFinder = new RandomPathFinder(start);
 		creativeFlying = MC.player.abilities.flying;
-		
+
 		EVENTS.add(UpdateListener.class, this);
 		EVENTS.add(RenderListener.class, this);
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
 		EVENTS.remove(UpdateListener.class, this);
 		EVENTS.remove(RenderListener.class, this);
-		
+
 		MC.options.keyForward.setPressed(
 			((IKeyBinding)MC.options.keyForward).isActallyPressed());
 		MC.options.keyJump
 			.setPressed(((IKeyBinding)MC.options.keyJump).isActallyPressed());
-		
+
 		pathFinder = null;
 		processor = null;
 		PathProcessor.releaseControls();
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
@@ -88,9 +88,9 @@ public final class AntiAfkHack extends Hack
 			setEnabled(false);
 			return;
 		}
-		
+
 		MC.player.abilities.flying = creativeFlying;
-		
+
 		if(useAi.isChecked())
 		{
 			// update timer
@@ -101,23 +101,23 @@ public final class AntiAfkHack extends Hack
 					MC.options.keyJump.setPressed(MC.player.isTouchingWater());
 				return;
 			}
-			
+
 			// find path
 			if(!pathFinder.isDone() && !pathFinder.isFailed())
 			{
 				PathProcessor.lockControls();
-				
+
 				pathFinder.think();
-				
+
 				if(!pathFinder.isDone() && !pathFinder.isFailed())
 					return;
-				
+
 				pathFinder.formatPath();
-				
+
 				// set processor
 				processor = pathFinder.getProcessor();
 			}
-			
+
 			// check path
 			if(processor != null
 				&& !pathFinder.isPathStillValid(processor.getIndex()))
@@ -125,13 +125,13 @@ public final class AntiAfkHack extends Hack
 				pathFinder = new RandomPathFinder(pathFinder);
 				return;
 			}
-			
+
 			// process path
 			if(!processor.isDone())
 				processor.process();
 			else
 				pathFinder = new RandomPathFinder(start);
-			
+
 			// wait 2 - 3 seconds (40 - 60 ticks)
 			if(processor.isDone())
 			{
@@ -147,37 +147,37 @@ public final class AntiAfkHack extends Hack
 					start.add(random.nextInt(3) - 1, 0, random.nextInt(3) - 1);
 				timer = 40 + random.nextInt(21);
 			}
-			
+
 			// face block
 			WURST.getRotationFaker().faceVectorClientIgnorePitch(
 				new Vec3d(nextBlock).add(0.5, 0.5, 0.5));
-			
+
 			// walk
 			if(MC.player.squaredDistanceTo(
 				new Vec3d(nextBlock).add(0.5, 0.5, 0.5)) > 0.5)
 				MC.options.keyForward.setPressed(true);
 			else
 				MC.options.keyForward.setPressed(false);
-			
+
 			// swim up
 			MC.options.keyJump.setPressed(MC.player.isTouchingWater());
-			
+
 			// update timer
 			if(timer > 0)
 				timer--;
 		}
 	}
-	
+
 	@Override
 	public void onRender(float partialTicks)
 	{
 		if(!useAi.isChecked())
 			return;
-		
+
 		PathCmd pathCmd = WURST.getCmds().pathCmd;
 		pathFinder.renderPath(pathCmd.isDebugMode(), pathCmd.isDepthTest());
 	}
-	
+
 	private class RandomPathFinder extends PathFinder
 	{
 		public RandomPathFinder(BlockPos goal)
@@ -188,14 +188,14 @@ public final class AntiAfkHack extends Hack
 			setFallingAllowed(false);
 			setDivingAllowed(false);
 		}
-		
+
 		public RandomPathFinder(PathFinder pathFinder)
 		{
 			super(pathFinder);
 			setFallingAllowed(false);
 			setDivingAllowed(false);
 		}
-		
+
 		@Override
 		public ArrayList<PathPos> formatPath()
 		{

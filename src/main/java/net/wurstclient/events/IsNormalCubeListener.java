@@ -15,7 +15,7 @@ import net.wurstclient.event.Listener;
 public interface IsNormalCubeListener extends Listener
 {
 	public void onIsNormalCube(IsNormalCubeEvent event);
-	
+
 	public static class IsNormalCubeEvent
 		extends CancellableEvent<IsNormalCubeListener>
 	{
@@ -25,12 +25,12 @@ public interface IsNormalCubeListener extends Listener
 			for(IsNormalCubeListener listener : listeners)
 			{
 				listener.onIsNormalCube(this);
-				
+
 				if(isCancelled())
 					break;
 			}
 		}
-		
+
 		@Override
 		public Class<IsNormalCubeListener> getListenerType()
 		{

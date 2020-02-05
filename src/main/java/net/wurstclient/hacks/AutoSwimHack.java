@@ -21,30 +21,30 @@ public final class AutoSwimHack extends Hack implements UpdateListener
 		super("AutoSwim", "Triggers the swimming animation automatically.");
 		setCategory(Category.MOVEMENT);
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
 		EVENTS.add(UpdateListener.class, this);
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
 		EVENTS.remove(UpdateListener.class, this);
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
 		ClientPlayerEntity player = MC.player;
-		
+
 		if(player.horizontalCollision || player.isSneaking())
 			return;
-		
+
 		if(!player.isTouchingWater())
 			return;
-		
+
 		if(player.forwardSpeed > 0)
 			player.setSprinting(true);
 	}

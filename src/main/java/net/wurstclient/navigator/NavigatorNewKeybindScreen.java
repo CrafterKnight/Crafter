@@ -28,14 +28,14 @@ public class NavigatorNewKeybindScreen extends NavigatorScreen
 	private String text = "";
 	private ButtonWidget okButton;
 	private boolean choosingKey;
-	
+
 	public NavigatorNewKeybindScreen(Set<PossibleKeybind> possibleKeybinds,
 		NavigatorFeatureScreen parent)
 	{
 		this.possibleKeybinds = possibleKeybinds;
 		this.parent = parent;
 	}
-	
+
 	@Override
 	protected void onResize()
 	{
@@ -45,15 +45,15 @@ public class NavigatorNewKeybindScreen extends NavigatorScreen
 				if(choosingKey)
 				{
 					String newCommands = selectedCommand.getCommand();
-					
+
 					String oldCommands = WurstClient.INSTANCE.getKeybinds()
 						.getCommands(selectedKey);
 					if(oldCommands != null)
 						newCommands = oldCommands + " ; " + newCommands;
-					
+
 					WurstClient.INSTANCE.getKeybinds().add(selectedKey,
 						newCommands);
-					
+
 					WurstClient.INSTANCE.getNavigator()
 						.addPreference(parent.getFeature().getName());
 					WurstClient.MC.openScreen(parent);
@@ -65,12 +65,12 @@ public class NavigatorNewKeybindScreen extends NavigatorScreen
 			});
 		okButton.active = selectedCommand != null;
 		addButton(okButton);
-		
+
 		// cancel button
 		addButton(new ButtonWidget(width / 2 + 2, height - 65, 149, 18,
 			"Cancel", b -> WurstClient.MC.openScreen(parent)));
 	}
-	
+
 	@Override
 	protected void onKeyPress(int keyCode, int scanCode, int int_3)
 	{
@@ -78,11 +78,11 @@ public class NavigatorNewKeybindScreen extends NavigatorScreen
 		{
 			selectedKey = InputUtil.getKeyCode(keyCode, scanCode).getName();
 			okButton.active = !selectedKey.equals("key.keyboard.unknown");
-			
+
 		}else if(keyCode == 1)
 			WurstClient.MC.openScreen(parent);
 	}
-	
+
 	@Override
 	protected void onMouseClick(double x, double y, int button)
 	{
@@ -93,7 +93,7 @@ public class NavigatorNewKeybindScreen extends NavigatorScreen
 			okButton.active = true;
 		}
 	}
-	
+
 	@Override
 	protected void onUpdate()
 	{
@@ -112,21 +112,21 @@ public class NavigatorNewKeybindScreen extends NavigatorScreen
 						"\n\nWARNING: This key is already bound to the following\ncommand(s):";
 					commands = commands.replace(";", "\u00a7")
 						.replace("\u00a7\u00a7", ";");
-					
+
 					for(String cmd : commands.split("\u00a7"))
 						text += "\n- " + cmd;
 				}
 			}
 		}else
 			text = "Select what this keybind should do.";
-		
+
 		// content height
 		if(choosingKey)
 			setContentHeight(getStringHeight(text));
 		else
 			setContentHeight(possibleKeybinds.size() * 24 - 10);
 	}
-	
+
 	@Override
 	protected void onRender(int mouseX, int mouseY, float partialTicks)
 	{
@@ -136,18 +136,18 @@ public class NavigatorNewKeybindScreen extends NavigatorScreen
 			0xffffff);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glEnable(GL11.GL_BLEND);
-		
+
 		// background
 		int bgx1 = middleX - 154;
 		int bgx2 = middleX + 154;
 		int bgy1 = 60;
 		int bgy2 = height - 43;
-		
+
 		// scissor box
 		RenderUtils.scissorBox(bgx1, bgy1, bgx2,
 			bgy2 - (buttons.isEmpty() ? 0 : 24));
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
-		
+
 		// possible keybinds
 		if(!choosingKey)
 		{
@@ -156,13 +156,13 @@ public class NavigatorNewKeybindScreen extends NavigatorScreen
 			for(PossibleKeybind pkb : possibleKeybinds)
 			{
 				yi += 24;
-				
+
 				// positions
 				int x1 = bgx1 + 2;
 				int x2 = bgx2 - 2;
 				int y1 = yi;
 				int y2 = y1 + 20;
-				
+
 				// color
 				if(mouseX >= x1 && mouseX <= x2 && mouseY >= y1 && mouseY <= y2
 					&& mouseY <= bgy2 - 24)
@@ -176,10 +176,10 @@ public class NavigatorNewKeybindScreen extends NavigatorScreen
 					GL11.glColor4f(0F, 1F, 0F, 0.25F);
 				else
 					GL11.glColor4f(0.25F, 0.25F, 0.25F, 0.25F);
-				
+
 				// button
 				drawBox(x1, y1, x2, y2);
-				
+
 				// text
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
 				drawString(minecraft.textRenderer, pkb.getDescription(), x1 + 1,
@@ -190,7 +190,7 @@ public class NavigatorNewKeybindScreen extends NavigatorScreen
 				GL11.glEnable(GL11.GL_BLEND);
 			}
 		}
-		
+
 		// text
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		int textY = bgy1 + scroll + 2;
@@ -200,10 +200,10 @@ public class NavigatorNewKeybindScreen extends NavigatorScreen
 			textY += minecraft.textRenderer.fontHeight;
 		}
 		GL11.glEnable(GL11.GL_BLEND);
-		
+
 		// scissor box
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
-		
+
 		// buttons below scissor box
 		for(AbstractButtonWidget button : buttons)
 		{
@@ -212,7 +212,7 @@ public class NavigatorNewKeybindScreen extends NavigatorScreen
 			int x2 = x1 + button.getWidth();
 			int y1 = button.y;
 			int y2 = y1 + 18;
-			
+
 			// color
 			if(!button.active)
 				GL11.glColor4f(0F, 0F, 0F, 0.25F);
@@ -221,11 +221,11 @@ public class NavigatorNewKeybindScreen extends NavigatorScreen
 				GL11.glColor4f(0.375F, 0.375F, 0.375F, 0.25F);
 			else
 				GL11.glColor4f(0.25F, 0.25F, 0.25F, 0.25F);
-			
+
 			// button
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			drawBox(x1, y1, x2, y2);
-			
+
 			// text
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			drawCenteredString(minecraft.textRenderer, button.getMessage(),
@@ -233,17 +233,17 @@ public class NavigatorNewKeybindScreen extends NavigatorScreen
 			GL11.glEnable(GL11.GL_BLEND);
 		}
 	}
-	
+
 	@Override
 	protected void onMouseDrag(double mouseX, double mouseY, int button,
 		double double_3, double double_4)
 	{
-		
+
 	}
-	
+
 	@Override
 	protected void onMouseRelease(double x, double y, int button)
 	{
-		
+
 	}
 }

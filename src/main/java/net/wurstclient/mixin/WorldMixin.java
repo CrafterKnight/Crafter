@@ -28,29 +28,29 @@ public abstract class WorldMixin implements IWorld, AutoCloseable
 		if(WurstClient.INSTANCE.getHax().noWeatherHack.isRainDisabled())
 			cir.setReturnValue(0F);
 	}
-	
+
 	@Override
 	public float getSkyAngle(float tickDelta)
 	{
 		NoWeatherHack noWeatherHack =
 			WurstClient.INSTANCE.getHax().noWeatherHack;
-		
+
 		long timeOfDay =
 			noWeatherHack.isTimeChanged() ? noWeatherHack.getChangedTime()
 				: getLevelProperties().getTimeOfDay();
-		
+
 		return getDimension().getSkyAngle(timeOfDay, tickDelta);
 	}
-	
+
 	@Override
 	public int getMoonPhase()
 	{
 		NoWeatherHack noWeatherHack =
 			WurstClient.INSTANCE.getHax().noWeatherHack;
-		
+
 		if(noWeatherHack.isMoonPhaseChanged())
 			return noWeatherHack.getChangedMoonPhase();
-		
+
 		return getDimension().getMoonPhase(getLevelProperties().getTimeOfDay());
 	}
 }

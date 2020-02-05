@@ -19,25 +19,25 @@ public class FakePlayerEntity extends OtherClientPlayerEntity
 {
 	private final ClientPlayerEntity player = WurstClient.MC.player;
 	private final ClientWorld world = WurstClient.MC.world;
-	
+
 	public FakePlayerEntity()
 	{
 		super(WurstClient.MC.world, WurstClient.MC.player.getGameProfile());
 		copyPositionAndRotation(player);
-		
+
 		copyInventory();
 		copyPlayerModel(player, this);
 		copyRotation();
 		resetCapeMovement();
-		
+
 		spawn();
 	}
-	
+
 	private void copyInventory()
 	{
 		inventory.clone(player.inventory);
 	}
-	
+
 	private void copyPlayerModel(Entity from, Entity to)
 	{
 		DataTracker fromTracker = from.getDataTracker();
@@ -45,30 +45,30 @@ public class FakePlayerEntity extends OtherClientPlayerEntity
 		Byte playerModel = fromTracker.get(PlayerEntity.PLAYER_MODEL_PARTS);
 		toTracker.set(PlayerEntity.PLAYER_MODEL_PARTS, playerModel);
 	}
-	
+
 	private void copyRotation()
 	{
 		headYaw = player.headYaw;
 		bodyYaw = player.bodyYaw;
 	}
-	
+
 	private void resetCapeMovement()
 	{
 		field_7500 = getX();
 		field_7521 = getY();
 		field_7499 = getZ();
 	}
-	
+
 	private void spawn()
 	{
 		world.addEntity(getEntityId(), this);
 	}
-	
+
 	public void despawn()
 	{
 		removed = true;
 	}
-	
+
 	public void resetPlayerPosition()
 	{
 		player.refreshPositionAndAngles(getX(), getY(), getZ(), yaw, pitch);

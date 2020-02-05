@@ -18,13 +18,13 @@ public final class DirectLoginScreen extends AltEditorScreen
 	{
 		super(prevScreen, new LiteralText("Direct Login"));
 	}
-	
+
 	@Override
 	protected String getDoneButtonText()
 	{
 		return "Login";
 	}
-	
+
 	@Override
 	protected void pressDoneButton()
 	{
@@ -32,10 +32,10 @@ public final class DirectLoginScreen extends AltEditorScreen
 		{
 			message = "";
 			LoginManager.changeCrackedName(getEmail());
-			
+
 		}else
 			message = LoginManager.login(getEmail(), getPassword());
-		
+
 		if(message.isEmpty())
 			minecraft.openScreen(new TitleScreen());
 		else

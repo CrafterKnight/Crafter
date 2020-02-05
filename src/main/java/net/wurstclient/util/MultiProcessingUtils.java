@@ -17,7 +17,7 @@ import java.util.Arrays;
 public enum MultiProcessingUtils
 {
 	;
-	
+
 	public static ProcessBuilder makeProcess(Class<?> mainClass, String... args)
 		throws IOException
 	{
@@ -27,34 +27,34 @@ public enum MultiProcessingUtils
 		cmd.add(getClasspath().toString());
 		cmd.add(mainClass.getName());
 		cmd.addAll(Arrays.asList(args));
-		
+
 		return new ProcessBuilder(cmd);
 	}
-	
+
 	public static Process startProcess(Class<?> mainClass, String... args)
 		throws IOException
 	{
 		return makeProcess(mainClass, args).inheritIO().start();
 	}
-	
+
 	public static Process startProcessWithIO(Class<?> mainClass, String... args)
 		throws IOException
 	{
 		return makeProcess(mainClass, args).start();
 	}
-	
+
 	private static Path getJavaDir()
 	{
 		return Paths.get(System.getProperty("java.home"), "bin", "java");
 	}
-	
+
 	private static Path getClasspath()
 	{
 		try
 		{
 			return Paths.get(MultiProcessingUtils.class.getProtectionDomain()
 				.getCodeSource().getLocation().toURI());
-			
+
 		}catch(URISyntaxException e)
 		{
 			throw new RuntimeException(e);

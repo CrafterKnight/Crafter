@@ -21,7 +21,7 @@ public class ServerListMixin implements IServerList
 {
 	@Shadow
 	private List<ServerInfo> servers;
-	
+
 	@Override
 	public void clear()
 	{

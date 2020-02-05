@@ -23,24 +23,24 @@ public final class AuthorCmd extends Command
 		super("author", "Changes the author of a written book.\n"
 			+ "Requires creative mode.", ".author <author>");
 	}
-	
+
 	@Override
 	public void call(String[] args) throws CmdException
 	{
 		if(args.length == 0)
 			throw new CmdSyntaxError();
-		
+
 		if(!MC.player.abilities.creativeMode)
 			throw new CmdError("Creative mode only.");
-		
+
 		ItemStack heldItem = MC.player.inventory.getMainHandStack();
 		int heldItemID = Item.getRawId(heldItem.getItem());
 		int writtenBookID = Item.getRawId(Items.WRITTEN_BOOK);
-		
+
 		if(heldItemID != writtenBookID)
 			throw new CmdError(
 				"You must hold a written book in your main hand.");
-		
+
 		String author = String.join(" ", args);
 		heldItem.putSubTag("author", StringTag.of(author));
 	}

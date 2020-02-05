@@ -34,7 +34,7 @@ public abstract class ClientConnectionMixin
 	{
 		PacketInputEvent event = new PacketInputEvent(packet);
 		WurstClient.INSTANCE.getEventManager().fire(event);
-		
+
 		if(event.isCancelled())
 			ci.cancel();
 	}

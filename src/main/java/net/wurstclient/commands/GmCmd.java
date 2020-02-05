@@ -17,13 +17,13 @@ public final class GmCmd extends Command
 	{
 		super("gm", "Shortcut for /gamemode.", ".gm <gamemode>");
 	}
-	
+
 	@Override
 	public void call(String[] args) throws CmdException
 	{
 		if(args.length < 1)
 			throw new CmdSyntaxError();
-		
+
 		String args2 = String.join(" ", args);
 		switch(args2)
 		{
@@ -31,23 +31,23 @@ public final class GmCmd extends Command
 			case "0":
 			args2 = "survival";
 			break;
-			
+
 			case "c":
 			case "1":
 			args2 = "creative";
 			break;
-			
+
 			case "a":
 			case "2":
 			args2 = "adventure";
 			break;
-			
+
 			case "sp":
 			case "3":
 			args2 = "spectator";
 			break;
 		}
-		
+
 		String message = "/gamemode " + args2;
 		MC.player.sendChatMessage(message);
 	}

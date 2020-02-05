@@ -9,8 +9,8 @@ package net.wurstclient.hacks;
 
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.options.KeyBinding;
-import net.minecraft.server.network.packet.ClientCommandC2SPacket;
-import net.minecraft.server.network.packet.ClientCommandC2SPacket.Mode;
+import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket;
+import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket.Mode;
 import net.wurstclient.Category;
 import net.wurstclient.SearchTags;
 import net.wurstclient.events.PostMotionListener;
@@ -28,57 +28,57 @@ public final class SneakHack extends Hack
 			+ "sneaking without slowing you down.\n"
 			+ "\u00a7lLegit\u00a7r mode actually makes you sneak.",
 		SneakMode.values(), SneakMode.LEGIT);
-	
+
 	public SneakHack()
 	{
 		super("Sneak", "Makes you sneak automatically.");
 		setCategory(Category.MOVEMENT);
 		addSetting(mode);
 	}
-	
+
 	@Override
 	public String getRenderName()
 	{
 		return getName() + " [" + mode.getSelected() + "]";
 	}
-	
+
 	@Override
 	public void onEnable()
 	{
 		EVENTS.add(PreMotionListener.class, this);
 		EVENTS.add(PostMotionListener.class, this);
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
 		EVENTS.remove(PreMotionListener.class, this);
 		EVENTS.remove(PostMotionListener.class, this);
-		
+
 		switch(mode.getSelected())
 		{
 			case LEGIT:
 			IKeyBinding sneakKey = (IKeyBinding)MC.options.keySneak;
 			((KeyBinding)sneakKey).setPressed(sneakKey.isActallyPressed());
 			break;
-			
+
 			case PACKET:
 			sendSneakPacket(Mode.RELEASE_SHIFT_KEY);
 			break;
 		}
 	}
-	
+
 	@Override
 	public void onPreMotion()
 	{
 		KeyBinding sneakKey = MC.options.keySneak;
-		
+
 		switch(mode.getSelected())
 		{
 			case LEGIT:
 			sneakKey.setPressed(true);
 			break;
-			
+
 			case PACKET:
 			sneakKey.setPressed(((IKeyBinding)sneakKey).isActallyPressed());
 			sendSneakPacket(Mode.PRESS_SHIFT_KEY);
@@ -86,17 +86,17 @@ public final class SneakHack extends Hack
 			break;
 		}
 	}
-	
+
 	@Override
 	public void onPostMotion()
 	{
 		if(mode.getSelected() != SneakMode.PACKET)
 			return;
-		
+
 		sendSneakPacket(Mode.RELEASE_SHIFT_KEY);
 		sendSneakPacket(Mode.PRESS_SHIFT_KEY);
 	}
-	
+
 	private void sendSneakPacket(Mode mode)
 	{
 		ClientPlayerEntity player = MC.player;
@@ -104,19 +104,19 @@ public final class SneakHack extends Hack
 			new ClientCommandC2SPacket(player, mode);
 		player.networkHandler.sendPacket(packet);
 	}
-	
+
 	private enum SneakMode
 	{
 		PACKET("Packet"),
 		LEGIT("Legit");
-		
+
 		private final String name;
-		
+
 		private SneakMode(String name)
 		{
 			this.name = name;
 		}
-		
+
 		@Override
 		public String toString()
 		{

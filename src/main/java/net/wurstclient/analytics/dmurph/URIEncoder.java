@@ -30,13 +30,13 @@ package net.wurstclient.analytics.dmurph;
  */
 public class URIEncoder
 {
-	
+
 	private static String mark = "-_.!~*'()\"";
-	
+
 	public static String encodeURI(String argString)
 	{
 		StringBuffer uri = new StringBuffer(); // Encoded URL
-		
+
 		char[] chars = argString.toCharArray();
 		for(char c : chars)
 			if(c >= '0' && c <= '9' || c >= 'a' && c <= 'z'
