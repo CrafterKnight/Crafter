@@ -148,6 +148,52 @@ public enum WurstClient
 		
 		analytics.trackPageView("/mc" + MC_VERSION + "/v" + VERSION,
 			"Wurst " + VERSION + " MC" + MC_VERSION);
+		
+		createWikiFiles();
+	}
+	
+	private void createWikiFiles()
+	{
+		Path wikiFolder = wurstFolder.resolve("wiki");
+		Path wikiCmdFolder = wikiFolder.resolve("cmd");
+		
+		try
+		{
+			Files.createDirectories(wikiCmdFolder);
+			
+		}catch(IOException e)
+		{
+			throw new RuntimeException(e);
+		}
+		
+		hax.getAllHax().parallelStream()
+			.forEach(hack -> createWikiFile(hack, wikiFolder));
+		cmds.getAllCmds().parallelStream()
+			.forEach(cmd -> createWikiFile(cmd, wikiCmdFolder));
+		otfs.getAllOtfs().parallelStream()
+			.forEach(otf -> createWikiFile(otf, wikiFolder));
+	}
+	
+	private void createWikiFile(Feature feature, Path wikiFolder)
+	{
+		WikiPage page = new WikiPage(feature);
+		
+		String fileName = feature.getName().toLowerCase().replace(" ", "_");
+		if(fileName.startsWith("."))
+			fileName = fileName.substring(1);
+		
+		Path path = wikiFolder.resolve(fileName + ".txt");
+		
+		try
+		{
+			byte[] bytes = page.getText().getBytes("UTF-8");
+			Files.write(path, bytes);
+			
+		}catch(IOException e)
+		{
+			System.err.println("Failed: " + path.getFileName());
+			e.printStackTrace();
+		}
 	}
 	
 	private Path createWurstFolder()
