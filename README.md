@@ -8,10 +8,18 @@ These pages can be used as a **starting point** to create Wurst Wiki pages more 
 
 1. Set up Wurst as you normally would (see the [README file](https://github.com/Wurst-Imperium/Wurst7/blob/master/README.md) in "master" for how to do that).
 
-2. Run Wurst and wait until you see the Minecraft title screen.
+2. Go to `(where you saved this repo)/run/wurst`, open the terminal and run the following:
+```
+mkdir changelogs
+git clone https://github.com/Wurst-Imperium/WurstClient.net.git
+mv WurstClient.net/_updates changelogs
+rm -rf WurstClient.net
+```
+(If you can't run the last command, just delete the "WurstClient.net" folder manually.)
 
-3. Done! Your generated wiki pages are in the "wurst/wiki" folder. By default, you'll find it at:  
-`(where you saved this repo)/run/wurst/wiki`
+3. Run Wurst and wait until you see the Minecraft title screen.
+
+4. Done! Your generated wiki pages are saved in `(where you saved this repo)/run/wurst/wiki`.
 
 ## Limitations
 
