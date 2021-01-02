@@ -9,6 +9,9 @@ package net.wurstclient;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import net.wurstclient.command.Command;
 import net.wurstclient.hack.Hack;
@@ -168,13 +171,46 @@ public final class WikiPage
 	private void addChanges()
 	{
 		text += "===== Changes =====\n\n";
-		
-		String name = feature.getName();
-		
 		text += "^Version^Changes^\n";
-		text += "|[[update:Wurst 1.2.3]] FIXME|Added " + name + ".|\n";
-		text += "|[[update:Wurst 2.3.4]] FIXME|Changed " + name + ".|\n";
-		text += "|[[update:Wurst 3.4.5]] FIXME|Removed " + name + ".|\n";
+		
+		String featureName = feature.getName();
+		Set<Entry<String, List<String>>> changelogs =
+			ChangelogParser.getChangelogs().entrySet();
+		
+		for(Entry<String, List<String>> entry : changelogs)
+		{
+			String version = entry.getKey().replace("-BETA", " Beta");
+			List<String> changes = entry.getValue();
+			boolean firstChangeInVersion = true;
+			
+			for(String change : changes)
+			{
+				if(!change.contains(featureName))
+					continue;
+				
+				if(change.contains("<li>") && change.contains("->"))
+					continue;
+				
+				if(change.startsWith("- "))
+					change = change.substring(2);
+				
+				// fix wiki links
+				change = change.replaceAll(
+					"\\[(.+?)\\]\\(https://wiki\\.wurstclient\\.net/.+?\\)",
+					"[[$1]]");
+				
+				// fix code/commands formatting
+				change = change.replace("`", "''");
+				
+				if(firstChangeInVersion)
+					text +=
+						"|[[update:Wurst " + version + "]]|" + change + "|\n";
+				else
+					text += "|:::|" + change + "|\n";
+				
+				firstChangeInVersion = false;
+			}
+		}
 	}
 	
 	public String getText()

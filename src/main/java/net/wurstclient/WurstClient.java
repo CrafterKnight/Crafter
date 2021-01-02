@@ -149,6 +149,7 @@ public enum WurstClient
 		analytics.trackPageView("/mc" + MC_VERSION + "/v" + VERSION,
 			"Wurst " + VERSION + " MC" + MC_VERSION);
 		
+		ChangelogParser.parseFolder(wurstFolder.resolve("changelogs"));
 		createWikiFiles();
 	}
 	
@@ -191,8 +192,7 @@ public enum WurstClient
 			
 		}catch(IOException e)
 		{
-			System.err.println("Failed: " + path.getFileName());
-			e.printStackTrace();
+			new IOException("Couldn't write " + path, e).printStackTrace();
 		}
 	}
 	
