@@ -14,6 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.chunk.Chunk;
 import net.wurstclient.WurstClient;
 
 public enum RenderUtils
@@ -56,6 +57,18 @@ public enum RenderUtils
 		GL11.glTranslated(regionX - camPos.x, -camPos.y, regionZ - camPos.z);
 	}
 	
+	public static void applyRegionalRenderOffset(Chunk chunk)
+	{
+		applyCameraRotationOnly();
+		
+		Vec3d camPos = getCameraPos();
+		
+		int regionX = (chunk.getPos().getStartX() >> 9) * 512;
+		int regionZ = (chunk.getPos().getStartZ() >> 9) * 512;
+		
+		GL11.glTranslated(regionX - camPos.x, -camPos.y, regionZ - camPos.z);
+	}
+	
 	public static void applyCameraRotationOnly()
 	{
 		Camera camera = WurstClient.MC.getBlockEntityRenderDispatcher().camera;
@@ -71,7 +84,8 @@ public enum RenderUtils
 	
 	public static BlockPos getCameraBlockPos()
 	{
-		return WurstClient.MC.getBlockEntityRenderDispatcher().camera.getBlockPos();
+		return WurstClient.MC.getBlockEntityRenderDispatcher().camera
+			.getBlockPos();
 	}
 	
 	public static void drawSolidBox()
