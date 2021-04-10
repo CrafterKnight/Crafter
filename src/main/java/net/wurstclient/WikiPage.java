@@ -67,15 +67,15 @@ public final class WikiPage
 		text += "<WRAP 516px>\n";
 		text += "^  " + name + "  ^^\n";
 		text += "|{{ " + picName + ".webp?500 |}}||\n";
-		text += "^Type|[[" + type + "]]|\n";
-		text += "^Category|[[" + category + "]]|\n";
+		text += "^Type|[[:" + type + "]]|\n";
+		text += "^Category|[[:" + category + "]]|\n";
 		text += "^In-game description|" + description + "|\n";
 		text +=
-			"^[[keybinds#default_keybinds|Default keybind]]|" + keybind + "|\n";
+			"^[[:keybinds#default_keybinds|Default keybind]]|" + keybind + "|\n";
 		text += "</WRAP>\n\n";
 		
 		String type2 = feature instanceof Hack ? "Minecraft hack"
-			: feature instanceof Command ? "[[command|chat command]]"
+			: feature instanceof Command ? "[[:command|chat command]]"
 				: "Wurst feature";
 		text += name + " is a " + type2 + " that... FIXME\n\n";
 	}
