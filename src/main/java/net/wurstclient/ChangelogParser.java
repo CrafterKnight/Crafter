@@ -90,8 +90,21 @@ public enum ChangelogParser
 		Stream<String> stream =
 			lines.subList(endOfFrontmatter + 1, lines.size()).stream();
 		
+		// feature lists
 		stream = stream.filter(change -> !change.contains("<li>"));
+		
+		// keybinds
 		stream = stream.filter(change -> !change.contains("->"));
+		
+		// ClickGUI spam
+		stream = stream.filter(change -> !change.contains(
+			"-based ClickGUI (which you can open by pressing **Right CTRL**)."));
+		stream = stream.filter(change -> !change
+			.contains("Window-based ClickGUI (press **Right CTRL** to open)."));
+		stream = stream.filter(change -> !change.contains(
+			"**Note:** If you can't open the ClickGUI by pressing Right CTRL, try using the following command (in the Minecraft chat): <code>.binds&nbsp;reset</code>"));
+		stream = stream.filter(
+			change -> !change.contains("Some usable hacks are ClickGUI,"));
 		
 		stream = stream.map(change -> {
 			if(change.startsWith("- "))
