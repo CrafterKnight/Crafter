@@ -120,6 +120,11 @@ public enum ChangelogParser
 		// fix code/commands formatting
 		stream = stream.map(change -> change.replace("`", "''"));
 		
+		// fix "Thanks to ...!" entries
+		stream = stream.map(change -> change.replaceAll(
+			"\\(Thanks to <a href=\"https://github.com/[^\"]+\"[^>]+>([^<]+)</a>!\\)",
+			"(Thanks to [[gh>$1]]!)"));
+		
 		ArrayList<String> changes =
 			stream.collect(Collectors.toCollection(() -> new ArrayList<>()));
 		
