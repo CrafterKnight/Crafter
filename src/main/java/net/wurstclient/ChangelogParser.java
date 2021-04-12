@@ -10,12 +10,14 @@ package net.wurstclient;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum ChangelogParser
@@ -85,8 +87,28 @@ public enum ChangelogParser
 			throw new IllegalStateException(
 				"Couldn't parse frontmatter of " + path);
 		
+		Stream<String> stream =
+			lines.subList(endOfFrontmatter + 1, lines.size()).stream();
+		
+		stream = stream.filter(change -> !change.contains("<li>"));
+		stream = stream.filter(change -> !change.contains("->"));
+		
+		stream = stream.map(change -> {
+			if(change.startsWith("- "))
+				return change.substring(2);
+			else
+				return change;
+		});
+		
+		// fix wiki links
+		stream = stream.map(change -> change.replaceAll(
+			"\\[(.+?)\\]\\(https://wiki\\.wurstclient\\.net/.+?\\)", "[[$1]]"));
+		
+		// fix code/commands formatting
+		stream = stream.map(change -> change.replace("`", "''"));
+		
 		List<String> changes = Collections.unmodifiableList(
-			lines.subList(endOfFrontmatter + 1, lines.size()));
+			stream.collect(Collectors.toCollection(() -> new ArrayList<>())));
 		
 		changelogs.put(version, changes);
 	}

@@ -70,8 +70,8 @@ public final class WikiPage
 		text += "^Type|[[:" + type + "]]|\n";
 		text += "^Category|[[:" + category + "]]|\n";
 		text += "^In-game description|" + description + "|\n";
-		text +=
-			"^[[:keybinds#default_keybinds|Default keybind]]|" + keybind + "|\n";
+		text += "^[[:keybinds#default_keybinds|Default keybind]]|" + keybind
+			+ "|\n";
 		text += "</WRAP>\n\n";
 		
 		String type2 = feature instanceof Hack ? "Minecraft hack"
@@ -177,30 +177,16 @@ public final class WikiPage
 		Set<Entry<String, List<String>>> changelogs =
 			ChangelogParser.getChangelogs().entrySet();
 		
-		for(Entry<String, List<String>> entry : changelogs)
+		for(Entry<String, List<String>> changelog : changelogs)
 		{
-			String version = entry.getKey().replace("-BETA", " Beta");
-			List<String> changes = entry.getValue();
+			String version = changelog.getKey().replace("-BETA", " Beta");
+			List<String> changes = changelog.getValue();
 			boolean firstChangeInVersion = true;
 			
 			for(String change : changes)
 			{
 				if(!change.contains(featureName))
 					continue;
-				
-				if(change.contains("<li>") && change.contains("->"))
-					continue;
-				
-				if(change.startsWith("- "))
-					change = change.substring(2);
-				
-				// fix wiki links
-				change = change.replaceAll(
-					"\\[(.+?)\\]\\(https://wiki\\.wurstclient\\.net/.+?\\)",
-					"[[$1]]");
-				
-				// fix code/commands formatting
-				change = change.replace("`", "''");
 				
 				if(firstChangeInVersion)
 					text +=
