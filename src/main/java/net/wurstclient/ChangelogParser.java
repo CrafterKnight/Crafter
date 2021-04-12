@@ -107,10 +107,35 @@ public enum ChangelogParser
 		// fix code/commands formatting
 		stream = stream.map(change -> change.replace("`", "''"));
 		
-		List<String> changes = Collections.unmodifiableList(
-			stream.collect(Collectors.toCollection(() -> new ArrayList<>())));
+		ArrayList<String> changes =
+			stream.collect(Collectors.toCollection(() -> new ArrayList<>()));
 		
-		changelogs.put(version, changes);
+		// fix "... is back!" entries
+		if(version.startsWith("7.0pre"))
+			for(int i = 0; i < changes.size(); i++)
+			{
+				String change = changes.get(i);
+				if(!change.endsWith(" is back!"))
+					continue;
+				
+				String feature =
+					change.substring(0, change.indexOf(" is back!"));
+				
+				ArrayList<String> changes2 = new ArrayList<>();
+				
+				List<String> oldChanges2 = changelogs.get("7.0pre1");
+				if(oldChanges2 != null)
+					changes2.addAll(oldChanges2);
+				
+				changes2.add("Temporarily removed " + feature + ".");
+				
+				changelogs.put("7.0pre1",
+					Collections.unmodifiableList(changes2));
+				
+				changes.set(i, "Re-added " + feature + ".");
+			}
+		
+		changelogs.put(version, Collections.unmodifiableList(changes));
 	}
 	
 	public static Map<String, List<String>> getChangelogs()
