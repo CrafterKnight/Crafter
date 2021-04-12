@@ -13,6 +13,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -173,6 +176,8 @@ public enum WurstClient
 			.forEach(cmd -> createWikiFile(cmd, wikiCmdFolder));
 		otfs.getAllOtfs().parallelStream()
 			.forEach(otf -> createWikiFile(otf, wikiFolder));
+		
+		createUpdateFiles(wikiFolder);
 	}
 	
 	private void createWikiFile(Feature feature, Path wikiFolder)
@@ -193,6 +198,44 @@ public enum WurstClient
 		}catch(IOException e)
 		{
 			new IOException("Couldn't write " + path, e).printStackTrace();
+		}
+	}
+	
+	private void createUpdateFiles(Path wikiFolder)
+	{
+		Path updateFolder = wikiFolder.resolve("update");
+		
+		try
+		{
+			Files.createDirectories(updateFolder);
+			
+		}catch(IOException e)
+		{
+			throw new RuntimeException(e);
+		}
+		
+		Set<Entry<String, List<String>>> changelogs =
+			ChangelogParser.getChangelogs().entrySet();
+		
+		for(Entry<String, List<String>> changelog : changelogs)
+		{
+			String version = changelog.getKey().replace("-BETA", " Beta");
+			String fileName =
+				"wurst_" + version.toLowerCase().replace(" ", "_");
+			Path path = updateFolder.resolve(fileName + ".txt");
+			
+			String text = "[[https://www.wurstclient.net/updates/wurst-"
+				+ version.toLowerCase().replaceAll("[\\. ]", "-") + "/]]";
+			
+			try
+			{
+				byte[] bytes = text.getBytes("UTF-8");
+				Files.write(path, bytes);
+				
+			}catch(IOException e)
+			{
+				new IOException("Couldn't write " + path, e).printStackTrace();
+			}
 		}
 	}
 	
