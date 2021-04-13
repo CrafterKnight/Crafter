@@ -165,7 +165,7 @@ public final class WikiPage
 			return "(none)";
 		
 		return "\"" + input.replace("\n", "\\\\ ")
-			.replaceAll("\u00a7l([\\w \\-_]+)\u00a7r", "**$1**") + "\"";
+			.replaceAll("\u00a7l([^\u00a7]+)\u00a7r", "**$1**") + "\"";
 	}
 	
 	private void addChanges()
