@@ -36,6 +36,7 @@ public final class FlightHack extends Hack
 	@Override
 	public void onEnable()
 	{
+		WURST.getHax().creativeFlightHack.setEnabled(false);
 		WURST.getHax().jetpackHack.setEnabled(false);
 		
 		EVENTS.add(UpdateListener.class, this);
@@ -58,13 +59,13 @@ public final class FlightHack extends Hack
 		player.flyingSpeed = speed.getValueF();
 		
 		player.setVelocity(0, 0, 0);
-		Vec3d velcity = player.getVelocity();
+		Vec3d velocity = player.getVelocity();
 		
 		if(MC.options.keyJump.isPressed())
-			player.setVelocity(velcity.add(0, speed.getValue(), 0));
+			player.setVelocity(velocity.add(0, speed.getValue(), 0));
 		
 		if(MC.options.keySneak.isPressed())
-			player.setVelocity(velcity.subtract(0, speed.getValue(), 0));
+			player.setVelocity(velocity.subtract(0, speed.getValue(), 0));
 	}
 	
 	@Override
