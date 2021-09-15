@@ -19,9 +19,11 @@ import net.wurstclient.hacks.KillauraHack;
 import net.wurstclient.keybinds.Keybind;
 import net.wurstclient.keybinds.KeybindList;
 import net.wurstclient.settings.CheckboxSetting;
+import net.wurstclient.settings.ColorSetting;
 import net.wurstclient.settings.EnumSetting;
 import net.wurstclient.settings.Setting;
 import net.wurstclient.settings.SliderSetting;
+import net.wurstclient.util.ColorUtils;
 
 public final class WikiPage
 {
@@ -113,34 +115,30 @@ public final class WikiPage
 		
 		String type = setting instanceof CheckboxSetting ? "Checkbox"
 			: setting instanceof SliderSetting ? "Slider"
-				: setting instanceof EnumSetting ? "Enum" : "FIXME";
+				: setting instanceof EnumSetting ? "Enum"
+					: setting instanceof ColorSetting
+						? "[[:ColorSetting|Color]]" : "FIXME";
 		
 		text += "^Type|" + type + "|\n";
 		
 		String description = convertDescription(setting.getDescription());
 		text += "^In-game description|" + description + "|\n";
 		
-		if(setting instanceof CheckboxSetting)
+		if(setting instanceof CheckboxSetting checkbox)
 		{
-			CheckboxSetting checkbox = (CheckboxSetting)setting;
-			
 			String defaultValue =
 				checkbox.isCheckedByDefault() ? "checked" : "not checked";
 			text += "^Default value|" + defaultValue + "|\n";
 			
-		}else if(setting instanceof SliderSetting)
+		}else if(setting instanceof SliderSetting slider)
 		{
-			SliderSetting slider = (SliderSetting)setting;
-			
 			text += "^Default value|" + slider.getDefaultValue() + "|\n";
 			text += "^Minimum|" + slider.getMinimum() + "|\n";
 			text += "^Maximum|" + slider.getMaximum() + "|\n";
 			text += "^Increment|" + slider.getIncrement() + "|\n";
 			
-		}else if(setting instanceof EnumSetting)
+		}else if(setting instanceof EnumSetting<?> enumSetting)
 		{
-			EnumSetting<?> enumSetting = (EnumSetting<?>)setting;
-			
 			text +=
 				"^Default value|" + enumSetting.getDefaultSelected() + "|\n";
 			
@@ -150,6 +148,12 @@ public final class WikiPage
 				values += ", " + enumValues[i];
 			
 			text += "^Possible values|" + values + "|\n";
+			
+		}else if(setting instanceof ColorSetting colorSetting)
+		{
+			String defaultColor =
+				ColorUtils.toHex(colorSetting.getDefaultColor());
+			text += "^Default value|" + defaultColor + "|\n";
 		}
 		
 		if(description.equals("(none)"))
