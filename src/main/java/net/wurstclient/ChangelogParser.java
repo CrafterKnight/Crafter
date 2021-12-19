@@ -106,6 +106,12 @@ public enum ChangelogParser
 		stream = stream.filter(
 			change -> !change.contains("Some usable hacks are ClickGUI,"));
 		
+		// TabGUI spam
+		stream = stream.filter(change -> !change
+			.contains("TabGUI (must be enabled through Navigator"));
+		stream = stream.filter(change -> !change
+			.contains("TabGUI will be added back in later pre-releases."));
+		
 		stream = stream.map(change -> {
 			if(change.startsWith("- "))
 				return change.substring(2);
