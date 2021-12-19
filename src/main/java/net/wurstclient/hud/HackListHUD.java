@@ -53,7 +53,7 @@ public final class HackListHUD implements UpdateListener
 				| (int)(acColor[1] * 256) << 8 | (int)(acColor[2] * 256);
 			
 		}else
-			textColor = 0x04ffffff;
+			textColor = 0x04000000 | otf.getColor();
 		
 		int height = posY + activeHax.size() * 9;
 		Window sr = WurstClient.MC.getWindow();
@@ -188,6 +188,24 @@ public final class HackListHUD implements UpdateListener
 			hack = mod;
 			this.offset = offset;
 			prevOffset = offset;
+		}
+		
+		@Override
+		public boolean equals(Object obj)
+		{
+			// do not use Java 16 syntax here,
+			// it breaks Eclipse's Clean Up feature
+			if(!(obj instanceof HackListEntry))
+				return false;
+			
+			HackListEntry other = (HackListEntry)obj;
+			return hack == other.hack;
+		}
+		
+		@Override
+		public int hashCode()
+		{
+			return hack.hashCode();
 		}
 	}
 }

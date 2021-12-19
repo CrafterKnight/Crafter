@@ -8,6 +8,7 @@
 package net.wurstclient.mixin;
 
 import org.objectweb.asm.Opcodes;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,11 +21,12 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.WindowEventHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
+import net.minecraft.client.resource.language.LanguageManager;
 import net.minecraft.client.util.Session;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.snooper.SnooperListener;
 import net.minecraft.util.thread.ReentrantThreadExecutor;
 import net.wurstclient.WurstClient;
 import net.wurstclient.event.EventManager;
@@ -32,20 +34,28 @@ import net.wurstclient.events.LeftClickListener.LeftClickEvent;
 import net.wurstclient.events.RightClickListener.RightClickEvent;
 import net.wurstclient.mixinterface.IClientPlayerEntity;
 import net.wurstclient.mixinterface.IClientPlayerInteractionManager;
+import net.wurstclient.mixinterface.ILanguageManager;
 import net.wurstclient.mixinterface.IMinecraftClient;
+import net.wurstclient.mixinterface.IWorld;
 
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin
-	extends ReentrantThreadExecutor<Runnable> implements SnooperListener,
-	WindowEventHandler, AutoCloseable, IMinecraftClient
+	extends ReentrantThreadExecutor<Runnable>
+	implements WindowEventHandler, IMinecraftClient
 {
 	@Shadow
 	private int itemUseCooldown;
 	@Shadow
 	private ClientPlayerInteractionManager interactionManager;
 	@Shadow
+	@Final
+	private LanguageManager languageManager;
+	@Shadow
 	private ClientPlayerEntity player;
 	@Shadow
+	public ClientWorld world;
+	@Shadow
+	@Final
 	private Session session;
 	
 	private Session wurstSession;
@@ -142,9 +152,21 @@ public abstract class MinecraftClientMixin
 	}
 	
 	@Override
+	public IWorld getWorld()
+	{
+		return (IWorld)world;
+	}
+	
+	@Override
 	public IClientPlayerInteractionManager getInteractionManager()
 	{
 		return (IClientPlayerInteractionManager)interactionManager;
+	}
+	
+	@Override
+	public ILanguageManager getLanguageManager()
+	{
+		return (ILanguageManager)languageManager;
 	}
 	
 	@Override

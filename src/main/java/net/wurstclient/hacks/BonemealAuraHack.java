@@ -67,9 +67,7 @@ public final class BonemealAuraHack extends Hack implements UpdateListener
 	
 	public BonemealAuraHack()
 	{
-		super("BonemealAura",
-			"Automatically uses bone meal on specific types of plants.\n"
-				+ "Use the checkboxes to specify the types of plants.");
+		super("BonemealAura");
 		
 		setCategory(Category.BLOCKS);
 		addSetting(range);
@@ -220,14 +218,13 @@ public final class BonemealAuraHack extends Hack implements UpdateListener
 		if(block instanceof CropBlock
 			&& ((CropBlock)block).isFertilizable(world, pos, state, true))
 			return crops.isChecked();
-		else if(block instanceof StemBlock
+		if(block instanceof StemBlock
 			&& ((StemBlock)block).isFertilizable(world, pos, state, true))
 			return stems.isChecked();
-		else if(block instanceof CocoaBlock
+		if(block instanceof CocoaBlock
 			&& ((CocoaBlock)block).isFertilizable(world, pos, state, true))
 			return cocoa.isChecked();
-		else
-			return other.isChecked();
+		return other.isChecked();
 	}
 	
 	private boolean rightClickBlockLegit(BlockPos pos)

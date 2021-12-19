@@ -26,9 +26,7 @@ public final class FlightHack extends Hack
 	
 	public FlightHack()
 	{
-		super("Flight",
-			"Allows you to you fly.\n\n" + "\u00a7c\u00a7lWARNING:\u00a7r"
-				+ " You will take fall damage if you don't use NoFall.");
+		super("Flight");
 		setCategory(Category.MOVEMENT);
 		addSetting(speed);
 	}
@@ -56,7 +54,7 @@ public final class FlightHack extends Hack
 		ClientPlayerEntity player = MC.player;
 		
 		player.getAbilities().flying = false;
-		player.flyingSpeed = speed.getValueF();
+		player.airStrafingSpeed = speed.getValueF();
 		
 		player.setVelocity(0, 0, 0);
 		Vec3d velocity = player.getVelocity();

@@ -96,11 +96,7 @@ public final class TunnellerHack extends Hack
 	
 	public TunnellerHack()
 	{
-		super("Tunneller", "Automatically digs a tunnel.\n\n"
-			+ "\u00a7c\u00a7lWARNING:\u00a7r Although this bot will try to avoid\n"
-			+ "lava and other dangers, there is no guarantee\n"
-			+ "that it won't die. Only send it out with gear\n"
-			+ "that you don't mind losing.");
+		super("Tunneller");
 		
 		setCategory(Category.BLOCKS);
 		addSetting(size);
@@ -225,7 +221,7 @@ public final class TunnellerHack extends Hack
 				case 4 -> RenderSystem.setShaderColor(1, 1, 0, 0.5F);
 			}
 			
-			Matrix4f viewMatrix = matrixStack.peek().getModel();
+			Matrix4f viewMatrix = matrixStack.peek().getPositionMatrix();
 			Matrix4f projMatrix = RenderSystem.getProjectionMatrix();
 			Shader shader = RenderSystem.getShader();
 			buffer.setShader(viewMatrix, projMatrix, shader);
@@ -715,6 +711,7 @@ public final class TunnellerHack extends Hack
 	
 	private class PlaceTorchTask extends Task
 	{
+		@SuppressWarnings("deprecation")
 		@Override
 		public boolean canRun()
 		{
@@ -755,7 +752,9 @@ public final class TunnellerHack extends Hack
 			BlockState state = BlockUtils.getState(nextTorch);
 			if(!state.getMaterial().isReplaceable())
 				return false;
-			
+				
+			// Can't see why canPlaceAt() is deprecated. Still seems to be
+			// widely used with no replacement.
 			return Blocks.TORCH.canPlaceAt(state, MC.world, nextTorch);
 		}
 		

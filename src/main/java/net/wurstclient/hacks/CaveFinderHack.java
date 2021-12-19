@@ -106,8 +106,7 @@ public final class CaveFinderHack extends Hack
 	
 	public CaveFinderHack()
 	{
-		super("CaveFinder", "Helps you to find caves by\n"
-			+ "highlighting them in the\n" + "selected color.");
+		super("CaveFinder");
 		setCategory(Category.RENDER);
 		addSetting(area);
 		addSetting(limit);
@@ -243,7 +242,7 @@ public final class CaveFinderHack extends Hack
 		
 		if(vertexBuffer != null)
 		{
-			Matrix4f viewMatrix = matrixStack.peek().getModel();
+			Matrix4f viewMatrix = matrixStack.peek().getPositionMatrix();
 			Matrix4f projMatrix = RenderSystem.getProjectionMatrix();
 			Shader shader = RenderSystem.getShader();
 			vertexBuffer.setShader(viewMatrix, projMatrix, shader);

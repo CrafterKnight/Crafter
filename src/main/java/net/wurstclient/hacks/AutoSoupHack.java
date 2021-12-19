@@ -15,7 +15,7 @@ import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.MushroomStewItem;
+import net.minecraft.item.StewItem;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -39,10 +39,7 @@ public final class AutoSoupHack extends Hack implements UpdateListener
 	
 	public AutoSoupHack()
 	{
-		super("AutoSoup", "Automatically eats soup when your health is low.\n\n"
-			+ "\u00a7lNote:\u00a7r This hack ignores hunger and assumes that eating\n"
-			+ "soup directly refills your health. If the server you are\n"
-			+ "playing on is not configured to do that, use AutoEat instead.");
+		super("AutoSoup");
 		
 		setCategory(Category.COMBAT);
 		addSetting(health);
@@ -130,7 +127,7 @@ public final class AutoSoupHack extends Hack implements UpdateListener
 		{
 			ItemStack stack = MC.player.getInventory().getStack(i);
 			
-			if(stack != null && stack.getItem() instanceof MushroomStewItem)
+			if(stack != null && stack.getItem() instanceof StewItem)
 				return i;
 		}
 		

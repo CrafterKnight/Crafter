@@ -48,8 +48,7 @@ public final class AutoToolHack extends Hack
 	
 	public AutoToolHack()
 	{
-		super("AutoTool", "Automatically equips the fastest applicable tool\n"
-			+ "in your hotbar when you try to break a block.");
+		super("AutoTool");
 		
 		setCategory(Category.BLOCKS);
 		addSetting(useSwords);
@@ -129,10 +128,7 @@ public final class AutoToolHack extends Hack
 			}
 			
 			if(useHands && isWrongTool(heldItem, pos))
-			{
 				selectFallbackSlot();
-				return;
-			}
 			
 			return;
 		}

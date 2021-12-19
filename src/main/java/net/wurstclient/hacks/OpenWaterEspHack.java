@@ -27,10 +27,7 @@ public final class OpenWaterEspHack extends Hack implements RenderListener
 {
 	public OpenWaterEspHack()
 	{
-		super("OpenWaterESP",
-			"Shows whether or not you are fishing in 'open water' and\n"
-				+ "draws a box around the area used for the open water\n"
-				+ "calculation.");
+		super("OpenWaterESP");
 		
 		setCategory(Category.RENDER);
 	}
@@ -101,10 +98,8 @@ public final class OpenWaterEspHack extends Hack implements RenderListener
 		Box bb = new Box(-2, -1, -2, 3, 2, 3);
 		
 		if(isInOpenWater(bobber))
-		{
 			RenderSystem.setShaderColor(0, 1, 0, 0.5F);
-			
-		}else
+		else
 		{
 			RenderSystem.setShaderColor(1, 0, 0, 0.5F);
 			RenderUtils.drawCrossBox(bb, matrixStack);

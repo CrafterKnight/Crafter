@@ -138,7 +138,7 @@ public final class BowAimbotHack extends Hack
 	
 	public BowAimbotHack()
 	{
-		super("BowAimbot", "Automatically aims your bow or crossbow.");
+		super("BowAimbot");
 		
 		setCategory(Category.COMBAT);
 		addSetting(priority);
@@ -391,7 +391,7 @@ public final class BowAimbotHack extends Hack
 		
 		matrixStack.push();
 		
-		Matrix4f matrix = matrixStack.peek().getModel();
+		Matrix4f matrix = matrixStack.peek().getPositionMatrix();
 		BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
 		
 		String message;

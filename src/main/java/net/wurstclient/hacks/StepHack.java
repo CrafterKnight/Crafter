@@ -36,7 +36,7 @@ public final class StepHack extends Hack implements UpdateListener
 	
 	public StepHack()
 	{
-		super("Step", "Allows you to step up full blocks.");
+		super("Step");
 		setCategory(Category.MOVEMENT);
 		addSetting(mode);
 		addSetting(height);
@@ -90,9 +90,10 @@ public final class StepHack extends Hack implements UpdateListener
 		
 		double stepHeight = -1;
 		
-		ArrayList<Box> blockCollisions = MC.world
-			.getBlockCollisions(player, box).map(VoxelShape::getBoundingBox)
-			.collect(Collectors.toCollection(ArrayList::new));
+		ArrayList<Box> blockCollisions =
+			IMC.getWorld().getBlockCollisionsStream(player, box)
+				.map(VoxelShape::getBoundingBox)
+				.collect(Collectors.toCollection(ArrayList::new));
 		
 		for(Box bb : blockCollisions)
 			if(bb.maxY > stepHeight)

@@ -17,9 +17,13 @@ public interface IMinecraftClient
 	
 	public IClientPlayerInteractionManager getInteractionManager();
 	
+	public ILanguageManager getLanguageManager();
+	
 	public int getItemUseCooldown();
 	
 	public IClientPlayerEntity getPlayer();
+	
+	public IWorld getWorld();
 	
 	public void setSession(Session session);
 }

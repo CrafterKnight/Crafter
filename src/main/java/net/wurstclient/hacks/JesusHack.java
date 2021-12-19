@@ -39,8 +39,7 @@ public final class JesusHack extends Hack
 	
 	public JesusHack()
 	{
-		super("Jesus", "Allows you to walk on water.\n"
-			+ "Jesus used this hack ~2000 years ago.");
+		super("Jesus");
 		setCategory(Category.MOVEMENT);
 		addSetting(bypass);
 	}
@@ -158,8 +157,8 @@ public final class JesusHack extends Hack
 		boolean foundSolid = false;
 		
 		// check collision boxes below player
-		ArrayList<Box> blockCollisions = MC.world
-			.getBlockCollisions(MC.player,
+		ArrayList<Box> blockCollisions = IMC.getWorld()
+			.getBlockCollisionsStream(MC.player,
 				MC.player.getBoundingBox().offset(0, -0.5, 0))
 			.map(VoxelShape::getBoundingBox)
 			.collect(Collectors.toCollection(ArrayList::new));

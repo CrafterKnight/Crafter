@@ -70,10 +70,7 @@ public final class TreeBotHack extends Hack
 	
 	public TreeBotHack()
 	{
-		super("TreeBot",
-			"An experimental bot that automatically\n"
-				+ "walks around and chops down trees.\n"
-				+ "Limited to small trees for now.");
+		super("TreeBot");
 		setCategory(Category.BLOCKS);
 		addSetting(range);
 	}
@@ -322,7 +319,7 @@ public final class TreeBotHack extends Hack
 		RenderUtils.applyRegionalRenderOffset(matrixStack,
 			MC.world.getChunk(tree.getStump()));
 		
-		Matrix4f viewMatrix = matrixStack.peek().getModel();
+		Matrix4f viewMatrix = matrixStack.peek().getPositionMatrix();
 		Matrix4f projMatrix = RenderSystem.getProjectionMatrix();
 		Shader shader = RenderSystem.getShader();
 		
