@@ -88,7 +88,7 @@ public enum WurstClient
 	
 	public void initialize()
 	{
-		System.out.println("Starting Wurst Client...");
+		System.out.println("Starting Wurst Client (wiki-helper)...");
 		
 		wurstFolder = createWurstFolder();
 		
@@ -155,6 +155,9 @@ public enum WurstClient
 		
 		ChangelogParser.parseFolder(wurstFolder.resolve("changelogs"));
 		createWikiFiles();
+		
+		System.out.println("Done creating wiki pages.");
+		System.exit(0);
 	}
 	
 	private void createWikiFiles()
