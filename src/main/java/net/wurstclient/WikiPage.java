@@ -15,7 +15,6 @@ import java.util.Set;
 
 import net.wurstclient.command.Command;
 import net.wurstclient.hack.Hack;
-import net.wurstclient.hacks.KillauraHack;
 import net.wurstclient.keybinds.Keybind;
 import net.wurstclient.keybinds.KeybindList;
 import net.wurstclient.settings.CheckboxSetting;
@@ -39,14 +38,12 @@ public final class WikiPage
 		
 		addHeading();
 		addHackTable();
+		
+		if(feature instanceof Command)
+			addSyntax();
+		
 		addSettings();
 		addChanges();
-	}
-	
-	public static void main(String[] args)
-	{
-		WikiPage wikiPage = new WikiPage(new KillauraHack());
-		System.out.println(wikiPage.getText());
 	}
 	
 	private void addHeading()
@@ -94,6 +91,27 @@ public final class WikiPage
 					.toUpperCase();
 			
 		return "none";
+	}
+	
+	private void addSyntax()
+	{
+		text += "===== Syntax =====\n\n";
+		text += "Main article: [[Command Syntax]]\n\n";
+		
+		Command cmd = (Command)feature;
+		
+		for(String syntax : cmd.getSyntax())
+		{
+			if(syntax.startsWith("Syntax: "))
+				syntax = syntax.substring(8);
+			
+			text += "  * ''" + syntax
+				+ "'' FIXME explain what this does.\\\\ \\\\ \n";
+		}
+		
+		text += "\n";
+		text += "Examples:\n";
+		text += "  * ''" + cmd.getName() + "'' FIXME.\\\\ \\\\ \n\n";
 	}
 	
 	private void addSettings()
