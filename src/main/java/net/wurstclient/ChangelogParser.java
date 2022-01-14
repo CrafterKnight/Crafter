@@ -35,7 +35,7 @@ public enum ChangelogParser
 		try(Stream<Path> stream = Files.walk(folder))
 		{
 			stream.filter(Files::isRegularFile)
-				.forEach(path -> parseFile(path));
+				.forEach(ChangelogParser::parseFile);
 			
 		}catch(IOException e)
 		{
@@ -112,11 +112,14 @@ public enum ChangelogParser
 		stream = stream.filter(change -> !change
 			.contains("TabGUI will be added back in later pre-releases."));
 		
+		// .help spam
+		stream = stream.filter(
+			change -> !change.contains("All keybinds can be changed in-game."));
+		
 		stream = stream.map(change -> {
 			if(change.startsWith("- "))
 				return change.substring(2);
-			else
-				return change;
+			return change;
 		});
 		
 		// fix wiki links
@@ -132,7 +135,7 @@ public enum ChangelogParser
 			"(Thanks to [[gh>$1]]!)"));
 		
 		ArrayList<String> changes =
-			stream.collect(Collectors.toCollection(() -> new ArrayList<>()));
+			stream.collect(Collectors.toCollection(ArrayList::new));
 		
 		// fix "... is back!" entries
 		if(version.startsWith("7.0pre"))
