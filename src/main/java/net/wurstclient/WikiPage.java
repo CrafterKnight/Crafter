@@ -71,6 +71,8 @@ public final class WikiPage
 		text += "^In-game description|" + description + "|\n";
 		text += "^[[:keybinds#default_keybinds|Default keybind]]|" + keybind
 			+ "|\n";
+		text += "^Source code|[[w7src>"
+			+ feature.getClass().getName().replace(".", "/") + ".java]]|\n";
 		text += "</WRAP>\n\n";
 		
 		String type2 = feature instanceof Hack ? "Minecraft hack"
