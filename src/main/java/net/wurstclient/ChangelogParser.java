@@ -134,6 +134,9 @@ public enum ChangelogParser
 			"\\(Thanks to <a href=\"https://github.com/[^\"]+\"[^>]+>([^<]+)</a>!\\)",
 			"(Thanks to [[gh>$1]]!)"));
 		
+		// fix extra whitespace
+		stream = stream.map(String::trim);
+		
 		ArrayList<String> changes =
 			stream.collect(Collectors.toCollection(ArrayList::new));
 		
