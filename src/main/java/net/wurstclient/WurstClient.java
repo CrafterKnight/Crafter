@@ -192,7 +192,7 @@ public enum WurstClient
 		if(fileName.startsWith("."))
 			fileName = fileName.substring(1);
 		
-		Path path = wikiFolder.resolve(fileName + ".txt");
+		Path path = wikiFolder.resolve("_" + fileName + ".txt");
 		
 		try
 		{
