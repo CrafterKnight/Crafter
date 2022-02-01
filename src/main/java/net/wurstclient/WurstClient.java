@@ -153,11 +153,40 @@ public enum WurstClient
 		analytics.trackPageView("/mc" + MC_VERSION + "/v" + VERSION,
 			"Wurst " + VERSION + " MC" + MC_VERSION);
 		
-		ChangelogParser.parseFolder(wurstFolder.resolve("changelogs"));
-		createWikiFiles();
+		Thread thread = new Thread(() -> {
+			
+			System.out.println("Waiting for LanguageManager...");
+			long startTime = System.nanoTime();
+			waitForLangManager();
+			System.out.println("LanguageManager ready after "
+				+ (int)((System.nanoTime() - startTime) / 1e6) + " ms.");
+			
+			System.out.println("Creating wiki pages...");
+			startTime = System.nanoTime();
+			ChangelogParser.parseFolder(wurstFolder.resolve("changelogs"));
+			createWikiFiles();
+			System.out.println("Done creating wiki pages after "
+				+ (int)((System.nanoTime() - startTime) / 1e6) + " ms.");
+			
+			System.exit(0);
+			
+		}, "WikiHelper");
 		
-		System.out.println("Done creating wiki pages.");
-		System.exit(0);
+		thread.start();
+	}
+	
+	public void waitForLangManager()
+	{
+		while(IMC.getLanguageManager() == null
+			|| IMC.getLanguageManager().getEnglish() == null)
+			try
+			{
+				Thread.sleep(10);
+				
+			}catch(InterruptedException e)
+			{
+				
+			}
 	}
 	
 	private void createWikiFiles()

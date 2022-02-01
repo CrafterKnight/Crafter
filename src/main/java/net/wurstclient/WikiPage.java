@@ -188,7 +188,10 @@ public final class WikiPage
 		if(input.isEmpty())
 			return "(none)";
 		
-		return "\"" + input.replace("\n", "\\\\ ")
+		String translated =
+			WurstClient.IMC.getLanguageManager().getEnglish().get(input);
+		
+		return "\"" + translated.replace("\n", "\\\\ ")
 			.replaceAll("\u00a7l([^\u00a7]+)\u00a7r", "**$1**") + "\"";
 	}
 	
