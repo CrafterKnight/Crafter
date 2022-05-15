@@ -17,6 +17,7 @@ import net.wurstclient.command.Command;
 import net.wurstclient.hack.Hack;
 import net.wurstclient.keybinds.Keybind;
 import net.wurstclient.keybinds.KeybindList;
+import net.wurstclient.settings.AttackSpeedSliderSetting;
 import net.wurstclient.settings.CheckboxSetting;
 import net.wurstclient.settings.ColorSetting;
 import net.wurstclient.settings.EnumSetting;
@@ -31,6 +32,7 @@ public final class WikiPage
 	
 	private final Feature feature;
 	private String text = "";
+	private final ArrayList<String> tags = new ArrayList<>();
 	
 	public WikiPage(Feature feature)
 	{
@@ -44,6 +46,7 @@ public final class WikiPage
 		
 		addSettings();
 		addChanges();
+		addTags();
 	}
 	
 	private void addHeading()
@@ -130,6 +133,15 @@ public final class WikiPage
 	
 	private void addSetting(Setting setting)
 	{
+		if(setting instanceof AttackSpeedSliderSetting)
+		{
+			text += "===== =====\n";
+			text += "{{page>attack_speed&link&firstseconly}}\n";
+			text += "\n";
+			tags.add("has_attack_speed");
+			return;
+		}
+		
 		text += "==== " + setting.getName() + " ====\n";
 		text += "^  " + setting.getName() + "  ^^\n";
 		
@@ -224,6 +236,15 @@ public final class WikiPage
 				firstChangeInVersion = false;
 			}
 		}
+	}
+	
+	private void addTags()
+	{
+		if(tags.isEmpty())
+			return;
+		
+		text += "\n";
+		text += "{{tag>" + String.join(" ", tags) + "}}\n";
 	}
 	
 	public String getText()
