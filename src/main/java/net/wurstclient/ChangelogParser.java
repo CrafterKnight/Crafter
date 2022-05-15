@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -20,12 +21,14 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import net.wurstclient.update.Version;
+
 public enum ChangelogParser
 {
 	;
 	
 	private static final TreeMap<String, List<String>> changelogs =
-		new TreeMap<>();
+		new TreeMap<>(Comparator.comparing(Version::new));
 	
 	private static final Pattern versionRegex =
 		Pattern.compile("wurst-version: \"(.+)\"");

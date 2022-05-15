@@ -35,15 +35,11 @@ rm -rf WurstClient.net
 
 - The current version only parses changelogs from the main website, so any ForgeWurst changes will be missing from the "Changes" section.
 
-- The current version lists changes in the wrong order.
-
 ## Things to add
 
 **Disclaimer:** I'm not promising to add any of these things. They are just ideas that I think would be feasible and useful. Feel free to make a PR if you want to add any of this.
 
 - Also parse ForgeWurst changelogs for the changes table.
-
-- Sort changes by version before generating the table.
 
 - Auto-generate data for all types of settings. Currently missing:
   - BlockSetting
