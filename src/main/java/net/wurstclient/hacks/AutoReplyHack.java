@@ -7,7 +7,6 @@
  */
 package net.wurstclient.hacks;
 
-import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 import net.minecraft.text.Text;
 import net.wurstclient.Category;
 import net.wurstclient.SearchTags;
@@ -15,7 +14,6 @@ import net.wurstclient.events.ChatInputListener;
 import net.wurstclient.hack.Hack;
 import net.wurstclient.settings.CheckboxSetting;
 import net.wurstclient.settings.SliderSetting;
-import net.wurstclient.util.ChatUtils;
 
 @SearchTags({"auto reply", "Auto reply", "auto Reply",
 	"Auto Reply", "autoreply", "Autoreply", "autoReply",
@@ -196,8 +194,7 @@ public final class AutoReplyHack extends Hack implements ChatInputListener
 		t1 = new Thread(() -> {
 			try {
 				Thread.sleep(finalDelay);
-				ChatMessageC2SPacket packet = new ChatMessageC2SPacket(message);
-				MC.getNetworkHandler().sendPacket(packet);
+				MC.player.sendChatMessage(message, null);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
