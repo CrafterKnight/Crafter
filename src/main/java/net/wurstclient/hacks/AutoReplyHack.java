@@ -14,21 +14,20 @@ import net.wurstclient.events.ChatInputListener;
 import net.wurstclient.hack.Hack;
 import net.wurstclient.settings.CheckboxSetting;
 import net.wurstclient.settings.SliderSetting;
+import net.wurstclient.settings.SliderSetting.ValueDisplay;
 
 @SearchTags({"auto reply", "Auto reply", "auto Reply", "Auto Reply",
 	"autoreply", "Autoreply", "autoReply", "AutoReply"})
 public final class AutoReplyHack extends Hack implements ChatInputListener
 {
-	private final SliderSetting minimum_delay =
-		new SliderSetting("Minimum delay", 2200, 0, 6000, 100,
-			SliderSetting.ValueDisplay.DECIMAL);
-	
-	private final SliderSetting maximum_delay =
-		new SliderSetting("Maximum delay", 2200, 100, 6000, 100,
-			SliderSetting.ValueDisplay.DECIMAL);
-	
 	private final CheckboxSetting dontAnswerIfWon =
 		new CheckboxSetting("Don't answer if someone else won", false);
+	
+	private final SliderSetting minDelay = new SliderSetting("Min delay", 2200,
+		0, 6000, 100, ValueDisplay.INTEGER.withSuffix("ms"));
+	
+	private final SliderSetting maxDelay = new SliderSetting("Max delay", 2200,
+		100, 6000, 100, ValueDisplay.INTEGER.withSuffix("ms"));
 	
 	private Thread t1;
 	
@@ -38,8 +37,8 @@ public final class AutoReplyHack extends Hack implements ChatInputListener
 		setCategory(Category.CHAT);
 		
 		addSetting(dontAnswerIfWon);
-		addSetting(minimum_delay);
-		addSetting(maximum_delay);
+		addSetting(minDelay);
+		addSetting(maxDelay);
 	}
 	
 	@Override
@@ -160,9 +159,9 @@ public final class AutoReplyHack extends Hack implements ChatInputListener
 	
 	private void say(String message, int extraDelay)
 	{
-		int randomDelay = (int)(Math.random()
-			* (maximum_delay.getValueI() - minimum_delay.getValueI())
-			+ minimum_delay.getValueI());
+		int max = maxDelay.getValueI();
+		int min = minDelay.getValueI();
+		int randomDelay = (int)(Math.random() * (max - min) + min);
 		int finalDelay = extraDelay + randomDelay;
 		
 		if(extraDelay != 0)
