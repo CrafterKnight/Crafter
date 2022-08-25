@@ -56,17 +56,8 @@ public final class AutoReplyHack extends Hack implements ChatInputListener
 	@Override
 	public void onReceivedMessage(ChatInputEvent event)
 	{
-		new Thread(() -> {
-			try
-			{
-				answer(event);
-				check(event);
-				
-			}catch(Exception e)
-			{
-				e.printStackTrace();
-			}
-		}, "ChatTranslator").start();
+		answer(event);
+		check(event);
 	}
 	
 	private void check(ChatInputEvent event)
