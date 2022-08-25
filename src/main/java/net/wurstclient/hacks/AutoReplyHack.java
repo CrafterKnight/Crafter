@@ -29,7 +29,7 @@ public final class AutoReplyHack extends Hack implements ChatInputListener
 	private final SliderSetting maxDelay = new SliderSetting("Max delay", 2200,
 		100, 6000, 100, ValueDisplay.INTEGER.withSuffix("ms"));
 	
-	private Thread t1;
+	private Thread answerThread;
 	
 	public AutoReplyHack()
 	{
@@ -78,7 +78,9 @@ public final class AutoReplyHack extends Hack implements ChatInputListener
 		{
 			ChatUtils.message(
 				"\u00a74AutoReply cancelled because someone already won.");
-			t1.interrupt();
+			
+			if(answerThread != null)
+				answerThread.interrupt();
 		}
 	}
 	
@@ -172,7 +174,7 @@ public final class AutoReplyHack extends Hack implements ChatInputListener
 			ChatUtils.message(
 				"\u00a7b Answer will be sent in " + randomDelay + "ms.");
 		
-		t1 = new Thread(() -> {
+		answerThread = new Thread(() -> {
 			try
 			{
 				Thread.sleep(finalDelay);
@@ -183,6 +185,6 @@ public final class AutoReplyHack extends Hack implements ChatInputListener
 				e.printStackTrace();
 			}
 		});
-		t1.start();
+		answerThread.start();
 	}
 }
