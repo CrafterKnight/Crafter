@@ -53,7 +53,11 @@ public final class AutoReplyHack extends Hack implements ChatInputListener
 		EVENTS.remove(ChatInputListener.class, this);
 		
 		if(answerThread != null)
+		{
 			answerThread.interrupt();
+			ChatUtils.message(
+				"\u00a74Answer cancelled because AutoReply is no longer enabled.");
+		}
 	}
 	
 	@Override
@@ -70,11 +74,12 @@ public final class AutoReplyHack extends Hack implements ChatInputListener
 		if(incomingMsg.contains("[WitchChat]") && incomingMsg.contains("Won in")
 			&& incomingMsg.contains("seconds!") && dontAnswerIfWon.isChecked())
 		{
-			ChatUtils.message(
-				"\u00a74AutoReply cancelled because someone already won.");
+			if(answerThread == null)
+				return;
 			
-			if(answerThread != null)
-				answerThread.interrupt();
+			answerThread.interrupt();
+			ChatUtils.message(
+				"\u00a74Answer cancelled because someone already won.");
 		}
 	}
 	
