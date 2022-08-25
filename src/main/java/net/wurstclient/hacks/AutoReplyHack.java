@@ -7,7 +7,6 @@
  */
 package net.wurstclient.hacks;
 
-import net.minecraft.text.Text;
 import net.wurstclient.Category;
 import net.wurstclient.SearchTags;
 import net.wurstclient.events.ChatInputListener;
@@ -15,6 +14,7 @@ import net.wurstclient.hack.Hack;
 import net.wurstclient.settings.CheckboxSetting;
 import net.wurstclient.settings.SliderSetting;
 import net.wurstclient.settings.SliderSetting.ValueDisplay;
+import net.wurstclient.util.ChatUtils;
 
 @SearchTags({"auto reply", "Auto reply", "auto Reply", "Auto Reply",
 	"autoreply", "Autoreply", "autoReply", "AutoReply"})
@@ -76,10 +76,8 @@ public final class AutoReplyHack extends Hack implements ChatInputListener
 		if(incomingMsg.contains("[WitchChat]") && incomingMsg.contains("Won in")
 			&& incomingMsg.contains("seconds!") && dontAnswerIfWon.isChecked())
 		{
-			MC.inGameHud.getChatHud()
-				.addMessage(Text.of("\u00a7a[\u00a74"
-					+ "Answer cancelled because someone already won"
-					+ "\u00a7a]:\u00a7r "));
+			ChatUtils.message(
+				"\u00a74AutoReply cancelled because someone already won.");
 			t1.interrupt();
 		}
 	}
@@ -165,14 +163,14 @@ public final class AutoReplyHack extends Hack implements ChatInputListener
 		int finalDelay = extraDelay + randomDelay;
 		
 		if(extraDelay != 0)
-			MC.inGameHud.getChatHud()
-				.addMessage(Text.of("\u00a7a[\u00a7b"
-					+ "Answer will be sent in " + finalDelay + "(" + randomDelay
-					+ "+" + extraDelay + ")" + "ms" + "\u00a7a]:\u00a7r "));
-		else
-			MC.inGameHud.getChatHud().addMessage(
-				Text.of("\u00a7a[\u00a7b" + "Answer will be sent in "
-					+ randomDelay + "ms" + "\u00a7a]:\u00a7r "));
+		{
+			String delayExplanation =
+				randomDelay + (extraDelay >= 0 ? "+" : "") + extraDelay;
+			ChatUtils.message("\u00a7bAnswer will be sent in " + finalDelay
+				+ "ms. (" + delayExplanation + ")");
+		}else
+			ChatUtils.message(
+				"\u00a7b Answer will be sent in " + randomDelay + "ms.");
 		
 		t1 = new Thread(() -> {
 			try
