@@ -51,6 +51,9 @@ public final class AutoReplyHack extends Hack implements ChatInputListener
 	public void onDisable()
 	{
 		EVENTS.remove(ChatInputListener.class, this);
+		
+		if(answerThread != null)
+			answerThread.interrupt();
 	}
 	
 	@Override
