@@ -16,8 +16,7 @@ import net.wurstclient.settings.SliderSetting;
 import net.wurstclient.settings.SliderSetting.ValueDisplay;
 import net.wurstclient.util.ChatUtils;
 
-@SearchTags({"auto reply", "Auto reply", "auto Reply", "Auto Reply",
-	"autoreply", "Autoreply", "autoReply", "AutoReply"})
+@SearchTags({"auto reply"})
 public final class AutoReplyHack extends Hack implements ChatInputListener
 {
 	private final CheckboxSetting dontAnswerIfWon =
