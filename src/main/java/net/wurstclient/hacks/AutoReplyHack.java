@@ -11,6 +11,9 @@ import net.wurstclient.Category;
 import net.wurstclient.SearchTags;
 import net.wurstclient.events.ChatInputListener;
 import net.wurstclient.hack.Hack;
+import net.wurstclient.hacks.autoreply.AutoReplyChallenge;
+import net.wurstclient.hacks.autoreply.AutoReplyProfile;
+import net.wurstclient.hacks.autoreply.WitchChatProfileBuilder;
 import net.wurstclient.settings.CheckboxSetting;
 import net.wurstclient.settings.SliderSetting;
 import net.wurstclient.settings.SliderSetting.ValueDisplay;
@@ -28,6 +31,7 @@ public final class AutoReplyHack extends Hack implements ChatInputListener
 	private final SliderSetting maxDelay = new SliderSetting("Max delay", 2200,
 		100, 6000, 100, ValueDisplay.INTEGER.withSuffix("ms"));
 	
+	private AutoReplyProfile profile = new WitchChatProfileBuilder().build();
 	private Thread answerThread;
 	
 	public AutoReplyHack()
@@ -62,14 +66,14 @@ public final class AutoReplyHack extends Hack implements ChatInputListener
 	@Override
 	public void onReceivedMessage(ChatInputEvent event)
 	{
-		answer(event);
-		check(event);
-	}
-	
-	private void check(ChatInputEvent event)
-	{
 		String incomingMsg = event.getComponent().getString();
 		
+		answer(incomingMsg);
+		check(incomingMsg);
+	}
+	
+	private void check(String incomingMsg)
+	{
 		if(incomingMsg.contains("[WitchChat]") && incomingMsg.contains("Won in")
 			&& incomingMsg.contains("seconds!") && dontAnswerIfWon.isChecked())
 		{
@@ -82,77 +86,13 @@ public final class AutoReplyHack extends Hack implements ChatInputListener
 		}
 	}
 	
-	private void answer(ChatInputEvent event)
+	private void answer(String incomingMsg)
 	{
-		String incomingMsg = event.getComponent().getString();
+		AutoReplyChallenge challenge = profile.findChallenge(incomingMsg);
+		if(challenge == null)
+			return;
 		
-		if(incomingMsg.contains("[WitchChat] Type this sjfgjsoidsoiadoia"))
-			say("sjfgjsoidsoiadoia", 3000);
-		if(incomingMsg.contains("[WitchChat] Type this asndbfq"))
-			say("asndbfq", 800);
-		if(incomingMsg.contains("[WitchChat] School"))
-			say("Shooter", 0);
-		if(incomingMsg.contains("[WitchChat] We live in a..."))
-			say("society", 0);
-		if(incomingMsg.contains("[WitchChat] You are..."))
-			say("black.", 0);
-		if(incomingMsg
-			.contains("[WitchChat] How many dungeons the server has?"))
-			say("11", -600);
-		if(incomingMsg.contains("[WitchChat] Write the haha number"))
-			say("69", -600);
-		if(incomingMsg.contains(
-			"[WitchChat] What can you wear to stop an Enderman attacking you?"))
-			say("pumpkin", 0);
-		if(incomingMsg.contains("[WitchChat] LMFAO is working with?"))
-			say("lmao", 0);
-		if(incomingMsg.contains(
-			"[WitchChat] What ore can you build complicated machines with?"))
-			say("Redstone", 0);
-		if(incomingMsg.contains("[WitchChat] Popular internet phrase"))
-			say("simp", 0);
-		if(incomingMsg.contains(
-			"[WitchChat] What name can u give a mob to turn it upside down?"))
-			say("grumm", 0);
-		if(incomingMsg.contains("[WitchChat] Name one of the famous dere type"))
-			say("yandere", 0);
-		if(incomingMsg.contains("[WitchChat] Wingardium ..."))
-			say("leviosa", 0);
-		if(incomingMsg.contains("[WitchChat] What game is minecraft's enemy?"))
-			say("Fortnite", 0);
-		if(incomingMsg.contains("[WitchChat] Never gonna..."))
-			say("Give you up.", 1000);
-		if(incomingMsg.contains("[WitchChat] Allahu ..."))
-			say("akbar", 0);
-		if(incomingMsg.contains("[WitchChat] step-brother help me im..."))
-			say("stuck", 0);
-		if(incomingMsg.contains("[WitchChat] Praise ..."))
-			say("The sun.", 500);
-		if(incomingMsg.contains("[WitchChat] Life"))
-			say("death.", 0);
-		if(incomingMsg.contains("[WitchChat] Say..."))
-			say("cheese", 0);
-		if(incomingMsg.contains("[WitchChat] A witch has a..."))
-			say("cat", 0);
-		if(incomingMsg.contains("[WitchChat] What is love?"))
-			say("Baby dont hurt me.", 1600);
-		if(incomingMsg.contains("[WitchChat] What are Creepers scared of?"))
-			say("cats", 0);
-		if(incomingMsg.contains("[WitchChat] Chicken"))
-			say("attack.", 0);
-		if(incomingMsg.contains("[WitchChat] Bible"))
-			say("black.", 0);
-		if(incomingMsg.contains("[WitchChat] Akio ..."))
-			say("bum", -400);
-		if(incomingMsg.contains("[WitchChat] League of Legends is ..."))
-			say("cancer", 0);
-		if(incomingMsg.contains("[WitchChat] What is the name of the bear?"))
-			say("winnie.", 0);
-		if(incomingMsg.contains("[WitchChat] How tall is Steve?"))
-			say("2 blocks.", 0);
-		if(incomingMsg
-			.contains("[WitchChat] What goes hand in hand with anime?"))
-			say("hentai.", 0);
+		say(challenge.getAnswer(), challenge.getExtraDelay());
 	}
 	
 	private void say(String message, int extraDelay)
