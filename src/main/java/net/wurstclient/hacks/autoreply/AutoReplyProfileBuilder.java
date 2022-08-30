@@ -7,20 +7,31 @@
  */
 package net.wurstclient.hacks.autoreply;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class AutoReplyProfileBuilder
 {
 	private final ArrayList<AutoReplyChallenge> tmpList = new ArrayList<>();
 	
-	public AutoReplyProfile build()
+	public AutoReplyProfile build(Path path)
 	{
-		return new AutoReplyProfile(tmpList);
+		return new AutoReplyProfile(path, tmpList);
+	}
+	
+	public void save(Path path)
+	{
+		new AutoReplyProfile(path, tmpList).save();
+	}
+	
+	public void add(AutoReplyChallenge challenge)
+	{
+		tmpList.add(challenge);
 	}
 	
 	public void add(String q, String a, int extraDelay)
 	{
-		tmpList.add(new AutoReplyChallenge(q, a, extraDelay));
+		add(new AutoReplyChallenge(q, a, extraDelay));
 	}
 	
 	public void add(String q, String a)

@@ -7,6 +7,11 @@
  */
 package net.wurstclient.hacks.autoreply;
 
+import com.google.gson.JsonObject;
+
+import net.wurstclient.util.json.JsonException;
+import net.wurstclient.util.json.WsonObject;
+
 public class AutoReplyChallenge
 {
 	private final String question;
@@ -38,5 +43,48 @@ public class AutoReplyChallenge
 	public int getExtraDelay()
 	{
 		return extraDelay;
+	}
+	
+	public JsonObject toJson()
+	{
+		JsonObject json = new JsonObject();
+		
+		json.addProperty("q", question);
+		json.addProperty("a", answer);
+		
+		if(extraDelay != 0)
+			json.addProperty("extraDelay", extraDelay);
+		
+		return json;
+	}
+	
+	public static AutoReplyChallenge fromJson(WsonObject json)
+		throws JsonException
+	{
+		try
+		{
+			String q = json.getString("q");
+			String a = json.getString("a");
+			int extraDelay =
+				json.has("extraDelay") ? json.getInt("extraDelay") : 0;
+			return new AutoReplyChallenge(q, a, extraDelay);
+			
+		}catch(JsonException e)
+		{
+			throw new JsonException("Invalid AutoReplyChallenge: " + json, e);
+		}
+	}
+	
+	public static AutoReplyChallenge tryFromJson(WsonObject json)
+	{
+		try
+		{
+			return fromJson(json);
+			
+		}catch(JsonException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

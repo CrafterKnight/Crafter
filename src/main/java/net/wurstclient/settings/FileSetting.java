@@ -58,6 +58,11 @@ public final class FileSetting extends Setting
 		return folder.resolve(selectedFile);
 	}
 	
+	public boolean isSelected(Path path)
+	{
+		return getSelectedFile().equals(path);
+	}
+	
 	public void setSelectedFile(String selectedFile)
 	{
 		Objects.requireNonNull(selectedFile);
